@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask, request, send_from_directory, redirect
+from flask import Flask, request, send_from_directory, redirect, render_template
 from pymongo import MongoClient
 from flask_login import LoginManager, login_user, login_required, logout_user
 from werkzeug.security import generate_password_hash
@@ -36,7 +36,6 @@ def login():
         incoming_password = request.form['password']
         print(f"attempting to login as: {username}")
         print("password:", incoming_password)
-        print("hashed:", generate_password_hash(incoming_password))
 
         db = get_database("user_auth")
         users_collection = db["users"]
@@ -59,6 +58,35 @@ def login():
             print("value error")
             return "Invalid Username or Password"
 
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'GET':
+        return send_from_directory("static", "register.html")
+    
+    elif request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        password_confirm = request.form['password_confirm']
+        
+        # Check if passwords match
+        if password != password_confirm:
+            return "Passwords do not match"
+        
+        db = get_database("user_auth")
+        users_collection = db["users"]
+        
+        # Check if username already exists
+        existing_user = users_collection.find_one({"username": username})
+        if existing_user:
+            return "Username already exists"
+        
+        # Create the new user
+        try:
+            User.create_user(users_collection, username, password)
+            return redirect("/login")
+        except Exception as e:
+            return f"Registration error: {str(e)}"
+
 @app.route("/logout")
 @login_required
 def logout():
@@ -66,13 +94,8 @@ def logout():
     return redirect("/login")
 
 @app.route('/')
-def index():  # put application's code here
-
-    # db = get_database("user_auth")
-    # users_collection = db["users"]
-    # print(list(users_collection.find({"username": "nile"})))
-
-    return 'Public page that anyone is allowed to see'
+def index():
+    return send_from_directory("static", "index.html")
 
 @app.route('/private')
 @login_required

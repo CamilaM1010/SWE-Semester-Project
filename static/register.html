@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DyNotes - Login</title>
+    <title>DyNotes - Register</title>
     <style>
         :root {
             --primary-color: #0021A5;
@@ -22,7 +22,7 @@
             background-color: var(--light-color);
             background-image: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
         }
-        .login-container {
+        .register-container {
             background-color: white;
             padding: 40px;
             border-radius: 8px;
@@ -83,17 +83,17 @@
             background-color: #4a5d99;
             transform: translateY(-2px);
         }
-        .register-link {
+        .login-link {
             text-align: center;
             margin-top: 20px;
             color: #666;
         }
-        .register-link a {
+        .login-link a {
             color: var(--primary-color);
             text-decoration: none;
             font-weight: bold;
         }
-        .register-link a:hover {
+        .login-link a:hover {
             text-decoration: underline;
         }
         .home-link {
@@ -106,22 +106,23 @@
         .home-link:hover {
             color: var(--primary-color);
         }
-        .tag-line {
+        .value-proposition {
             text-align: center;
             font-size: 0.9rem;
             color: #888;
             margin-top: 30px;
-            font-style: italic;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
         }
     </style>
 </head>
 <body>
-    <div class="login-container">
+    <div class="register-container">
         <div class="logo-container">
             <div class="logo">Dy<span>Notes</span></div>
         </div>
-        <h2>Welcome Back</h2>
-        <form action="/login" method="post">
+        <h2>Start Your Learning Journey</h2>
+        <form action="/register" method="post">
             <div class="form-group">
                 <label for="username">Username</label>
                 <input type="text" id="username" name="username" required>
@@ -130,13 +131,19 @@
                 <label for="password">Password</label>
                 <input type="password" id="password" name="password" required>
             </div>
-            <button type="submit">Log In</button>
+            <div class="form-group">
+                <label for="password_confirm">Confirm Password</label>
+                <input type="password" id="password_confirm" name="password_confirm" required>
+            </div>
+            <button type="submit">Create Account</button>
         </form>
-        <div class="register-link">
-            Don't have an account? <a href="/register">Register</a>
+        <div class="login-link">
+            Already have an account? <a href="/login">Log in</a>
         </div>
         <a href="/" class="home-link">Return to Home</a>
-        <div class="tag-line">Transform your learning experience with dynamic note-taking</div>
+        <div class="value-proposition">
+            Join DyNotes and transform your note-taking into a dynamic, adaptive learning experience
+        </div>
     </div>
 </body>
 </html>
