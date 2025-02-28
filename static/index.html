@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DyNotes - Dynamic Note-taking</title>
+    <style>
+        :root {
+            --primary-color: #0021A5;
+            --secondary-color: #FA4616;
+            --dark-color: #2c3e50;
+            --light-color: #f8f9fa;
+            --accent-color: #17a2b8;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--light-color);
+            color: var(--dark-color);
+        }
+        .navbar {
+            background-color: var(--primary-color);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .navbar .logo {
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+        .logo span {
+            color: var(--secondary-color);
+        }
+        .auth-buttons {
+            display: flex;
+            gap: 15px;
+        }
+        .btn {
+            padding: 10px 20px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .btn-login {
+            background-color: transparent;
+            color: white;
+            border: 2px solid white;
+        }
+        .btn-login:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        .btn-register {
+            background-color: var(--secondary-color);
+            color: var(--dark-color);
+            border: 2px solid var(--secondary-color);
+        }
+        .btn-register:hover {
+            background-color: #FA4616;
+        }
+        .hero {
+            text-align: center;
+            padding: 80px 20px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .hero h1 {
+            font-size: 2.8rem;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+        }
+        .hero h1 span {
+            color: var(--secondary-color);
+        }
+        .hero p {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            color: #555;
+            margin-bottom: 30px;
+        }
+        .cta-button {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+        }
+        .cta-button:hover {
+            background-color: #0021A5;
+            transform: translateY(-2px);
+        }
+        .cornell-demo {
+            background-color: white;
+            margin: 40px auto;
+            max-width: 900px;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+        }
+        .cornell-title {
+            font-size: 1.5rem;
+            text-align: center;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+        }
+        .cornell-layout {
+            display: flex;
+            min-height: 300px;
+            border: 1px solid #ddd;
+        }
+        .cornell-cues {
+            width: 200px;
+            padding: 15px;
+            background-color: #f0f7ff;
+            border-right: 1px solid #ddd;
+        }
+        .cornell-notes {
+            flex-grow: 1;
+            padding: 15px;
+        }
+        .cornell-summary {
+            padding: 15px;
+            background-color: #fff8e6;
+            border-top: 1px solid #ddd;
+        }
+        .features {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            padding: 40px 20px;
+            background-color: white;
+        }
+        .feature {
+            width: 280px;
+            margin: 20px;
+            padding: 30px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: transform 0.3s;
+        }
+        .feature:hover {
+            transform: translateY(-5px);
+        }
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+        }
+        .feature h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+        }
+        .feature p {
+            color: #666;
+            line-height: 1.5;
+        }
+        .footer {
+            text-align: center;
+            padding: 30px;
+            background-color: var(--dark-color);
+            color: #aaa;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <a href="/" class="logo">Dy<span>Notes</span></a>
+        <div class="auth-buttons">
+            <a href="/login" class="btn btn-login">Log In</a>
+            <a href="/register" class="btn btn-register">Register</a>
+        </div>
+    </div>
+
+    <div class="hero">
+        <h1>Transform Your Learning with <span>DyNotes</span></h1>
+        <p>A digital note-taking application that employs Cornell's methods of taking notes, designed for students of all ages across all disciplines who need a more personalized and engaging method of studying.</p>
+        <a href="/register" class="cta-button">Start Taking Better Notes</a>
+    </div>
+
+    <div class="cornell-demo">
+        <div class="cornell-title">Cornell Note-Taking Method</div>
+        <div class="cornell-layout">
+            <div class="cornell-cues">
+                <h4>Cues/Questions</h4>
+                <p>• What is active learning?</p>
+                <p>• Benefits of Cornell method?</p>
+                <p>• How does DyNotes enhance retention?</p>
+            </div>
+            <div class="cornell-notes">
+                <h4>Notes</h4>
+                <p>Cornell note-taking method divides the page into cues, notes, and summary sections. This structure promotes active recall and better organization of information.</p>
+                <p>DyNotes enhances this method with digital tools like automatic quiz generation based on your notes and customizable text editing features.</p>
+                <p>Studies show that structured note-taking improves retention by up to 30% compared to traditional methods.</p>
+            </div>
+        </div>
+        <div class="cornell-summary">
+            <h4>Summary</h4>
+            <p>The Cornell method combined with DyNotes' digital features creates an engaging learning experience that promotes active recall and increases information retention.</p>
+        </div>
+    </div>
+
+    <div class="features">
+        <div class="feature">
+            <div class="feature-icon">📝</div>
+            <h3>Cornell Method</h3>
+            <p>Structured note-taking approach with cues, notes, and summary sections that promotes active learning and better organization.</p>
+        </div>
+        <div class="feature">
+            <div class="feature-icon">🧠</div>
+            <h3>Automatic Quizzes</h3>
+            <p>Generate quizzes automatically from your notes to test your knowledge and reinforce learning through active recall.</p>
+        </div>
+        <div class="feature">
+            <div class="feature-icon">📊</div>
+            <h3>Learning Analytics</h3>
+            <p>Track your progress and identify areas for improvement with personalized learning analytics and insights.</p>
+        </div>
+        <div class="feature">
+            <div class="feature-icon">🎨</div>
+            <h3>Customization</h3>
+            <p>Personalize your note-taking experience with customizable templates, colors, and formatting options.</p>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>&copy; 2025 DyNotes. Transform traditional note-taking into a dynamic, adaptive learning experience.</p>
+    </div>
+</body>
+</html>
