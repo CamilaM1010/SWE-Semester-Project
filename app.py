@@ -15,7 +15,7 @@ login = LoginManager(app)
 login.login_view = 'login'
 
 def get_database(dbname):
-    CONNECTION_STRING = "mongodb://localhost:27017/"
+    CONNECTION_STRING = "mongodb+srv://aydinoznil:2fMUpD87WDNctc@cluster0.6p2s0.mongodb.net/"
     client = MongoClient(CONNECTION_STRING)
     return client[dbname]
 
