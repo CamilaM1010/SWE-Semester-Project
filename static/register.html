@@ -11,6 +11,7 @@
             --dark-color: #2c3e50;
             --light-color: #f8f9fa;
             --accent-color: #17a2b8;
+            --error-color: #dc3545;
         }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -114,6 +115,27 @@
             padding-top: 15px;
             border-top: 1px solid #eee;
         }
+        .error-message {
+            background-color: #f8d7da;
+            color: var(--error-color);
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 14px;
+        }
+        .password-container {
+            position: relative;
+        }
+        .password-toggle {
+            position: absolute;
+            right: 10px;
+            top: 12px;
+            cursor: pointer;
+            color: #888;
+            font-size: 14px;
+            user-select: none;
+        }
     </style>
 </head>
 <body>
@@ -122,6 +144,12 @@
             <div class="logo">Dy<span>Notes</span></div>
         </div>
         <h2>Start Your Learning Journey</h2>
+        
+        <!-- Error message banner -->
+        <div class="error-message" style="display: none">
+            {{error}}
+        </div>
+        
         <form action="/register" method="post">
             <div class="form-group">
                 <label for="username">Username</label>
@@ -129,11 +157,17 @@
             </div>
             <div class="form-group">
                 <label for="password">Password</label>
-                <input type="password" id="password" name="password" required>
+                <div class="password-container">
+                    <input type="password" id="password" name="password" required>
+                    <span class="password-toggle" onclick="togglePasswordVisibility('password')">Show</span>
+                </div>
             </div>
             <div class="form-group">
                 <label for="password_confirm">Confirm Password</label>
-                <input type="password" id="password_confirm" name="password_confirm" required>
+                <div class="password-container">
+                    <input type="password" id="password_confirm" name="password_confirm" required>
+                    <span class="password-toggle" onclick="togglePasswordVisibility('password_confirm')">Show</span>
+                </div>
             </div>
             <button type="submit">Create Account</button>
         </form>
@@ -145,5 +179,28 @@
             Join DyNotes and transform your note-taking into a dynamic, adaptive learning experience
         </div>
     </div>
+    
+    <script>
+        function togglePasswordVisibility(inputId) {
+            const passwordInput = document.getElementById(inputId);
+            const toggleButton = passwordInput.nextElementSibling;
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleButton.textContent = 'Hide';
+            } else {
+                passwordInput.type = 'password';
+                toggleButton.textContent = 'Show';
+            }
+        }
+        
+        // Auto-hide error message after 5 seconds
+        const errorMessage = document.querySelector('.error-message');
+        if (errorMessage.style.display === 'block') {
+            setTimeout(() => {
+                errorMessage.style.display = 'none';
+            }, 5000);
+        }
+    </script>
 </body>
 </html>
