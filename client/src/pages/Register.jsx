@@ -73,6 +73,10 @@ const Register = () => {
         <div className="form-link">
           Already have an account? <Link to="/login">Log in</Link>
         </div>
+
+        <div className="form-link">
+          Forgot password? <Link to="/reset-password">Reset Password</Link>
+        </div>
         
         <Link to="/" className="home-link">Return to Home</Link>
         
