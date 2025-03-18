@@ -6,6 +6,8 @@ from flask_cors import CORS
 from werkzeug.security import generate_password_hash
 from dotenv import load_dotenv
 from models import User
+from database import get_database
+from notes import notes_bp
 import secrets
 import datetime
 
@@ -15,15 +17,18 @@ app.secret_key = os.getenv("FLASK_SECRET_KEY", secrets.token_hex(16)).encode()
 
 # Enable CORS for development
 CORS(app, supports_credentials=True)
+CORS(notes_bp, supports_credentials=True)
 
 login = LoginManager(app)
-login.login_view = 'login'
+login.login_view = 'api_login'
 
-def get_database(dbname):
-    # Get MongoDB connection string from environment variable
-    CONNECTION_STRING = "mongodb+srv://aydinoznil:2fMUpD87WDNctc@cluster0.6p2s0.mongodb.net/"
-    client = MongoClient(CONNECTION_STRING)
-    return client[dbname]
+app.register_blueprint(notes_bp, url_prefix='/api/notes')
+
+# def get_database(dbname):
+#     # Get MongoDB connection string from environment variable
+#     CONNECTION_STRING = "mongodb+srv://aydinoznil:2fMUpD87WDNctc@cluster0.6p2s0.mongodb.net/"
+#     client = MongoClient(CONNECTION_STRING)
+#     return client[dbname]
 
 @login.user_loader
 def load_user(username):
