@@ -7,11 +7,6 @@ const Private = () => {
   const { user } = useAuth();
   const [notes, setNotes] = useState([]);
   const [loading, setLoading] = useState(true);
-  // const [modalOpen, setModalOpen] = useState(false);
-  // const [editingNote, setEditingNote] = useState(null);
-  // const [noteForm, setNoteForm] = useState({ title: '', content: '' });
-  // const [noteTitle, setNoteTitle] = useState("");
-  // const [noteContent, setNoteContent] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -31,66 +26,6 @@ const Private = () => {
 
     fetchNotes();
   }, []);
-
-  // const openModal = (note = null) => {
-  //   console.log("Opening modal with note:", note); // Debugging log
-  //   setEditingNote(note);  // Ensure note is passed as the object
-  //   setNoteForm(note ? { title: note.title, content: note.content || '' } : { title: '', content: '' });
-  //   setModalOpen(true);
-  // };
-
-  // const closeModal = () => {
-  //   setModalOpen(false);
-  //   setEditingNote(null);
-  //   setNoteForm({ title: '', content: '' });
-  // };
-
-    // const handleSave = async () => {
-  //   try {
-  //     if (editingNote && editingNote._id) {  // Ensure _id exists
-  //       const updatedNote = await api.updateNote(editingNote._id, noteForm);
-  //       setNotes(notes.map((note) => (note._id === updatedNote._id ? updatedNote : note)));
-  //     } else {
-  //       const newNote = await api.createNote(noteForm);
-  //       setNotes([...notes, newNote]);
-  //     }
-  //     closeModal();
-  //   } catch (error) {
-  //     console.error("Error saving note:", error);
-  //   }
-  // };
-
-
-  // const handleCreateNote = async () => {
-  //   const newNote = {
-  //     title: noteTitle,
-  //     content: noteContent,
-  //   };
-
-  //   try {
-  //     const response = await fetch("/api/notes", {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       credentials: "include",
-  //       body: JSON.stringify(newNote),
-  //     });
-
-  //     const data = await response.json();
-  //     console.log("Created Note Response:", data); // Add this log
-
-  //     if (response.ok) {
-  //       setNotes([...notes, {_id: data.note_id, title: noteTitle, content: noteContent }]);
-  //       setNoteTitle(""); // Clear input after success
-  //       setNoteContent("");
-  //     } else {
-  //       console.error("Failed to create note");
-  //     }
-  //   } catch (error) {
-  //     console.error("Error creating note:", error);
-  //   }
-  // };
 
   const handleDelete = async (noteId) => {
     if (!window.confirm("Are you sure you want to delete this note?")) return;
@@ -120,38 +55,255 @@ const Private = () => {
 
 
   return (
-    <div className="private-page">
-      <div className="welcome-header">
-        <h1>Welcome, {user?.username}!</h1>
-        <p>This is your private notes dashboard</p>
-        <button onClick={handleCreateNote}>Create Note</button>
-        </div>
-      
-      <div className="notes-container">
-        {loading ? (
-          <div className="loading">Loading your notes...</div>
-        ) : notes.length === 0 ? (
-          <div className="no-notes">
-            <p>You don't have any notes yet.</p>
+    <div style={{ 
+      backgroundColor: "#EBF5FF", 
+      minHeight: "100vh",
+      padding: "20px"
+    }}>
+      <div style={{ 
+        maxWidth: "1200px", 
+        margin: "0 auto"
+      }}>
+        <div style={{ 
+          display: "flex", 
+          justifyContent: "space-between", 
+          alignItems: "center",
+          background: "linear-gradient(90deg, #1E40AF 0%, #3B82F6 100%)",
+          padding: "20px 30px",
+          borderRadius: "12px",
+          marginBottom: "30px",
+          boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)"
+        }}>
+          <div>
+            <h1 style={{ 
+              fontSize: "28px", 
+              color: "white", 
+              margin: "0 0 5px 0",
+              display: "flex",
+              alignItems: "center"
+            }}>
+              Welcome, {user?.username}! <span style={{ marginLeft: "10px" }}>🦖</span>
+            </h1>
+            <p style={{ 
+              color: "#FFB74D", 
+              margin: "0",
+              fontSize: "16px"
+            }}>
+              Your prehistoric notes collection
+            </p>
           </div>
-        ) : (
-          <div className="notes-grid">
-            {notes.map(note => (
-              <div key={note._id} className="note-card">
-                <h3>{note.title}</h3>
-                <div className="note-footer">
-                  <span className="note-date">
-                    {new Date(Date.now()).toLocaleDateString()}
-                  </span>
-                  <div className="note-actions">
-                    <button onClick={() => handleEditNote(note._id)}>Edit</button>
-                    <button onClick={() => handleDelete(note._id)}>Delete</button>
+
+          <button 
+            onClick={handleCreateNote}
+            style={{
+              backgroundColor: "#F97316",
+              color: "white",
+              border: "none",
+              borderRadius: "50px",
+              padding: "14px 30px",
+              fontSize: "16px",
+              fontWeight: "bold",
+              cursor: "pointer",
+              boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+              display: "flex",
+              alignItems: "center",
+              transition: "transform 0.2s, background-color 0.2s"
+            }}
+          >
+            <span style={{ marginRight: "8px" }}>🦕</span> Create New Note
+          </button>
+        </div>
+        
+        <div>
+          {loading ? (
+            <div style={{
+              textAlign: "center",
+              padding: "40px 0",
+              fontSize: "18px",
+              color: "#1E40AF",
+              fontWeight: "bold",
+              background: "rgba(255, 255, 255, 0.7)",
+              borderRadius: "12px",
+              boxShadow: "0 2px 4px rgba(0, 0, 0, 0.05)"
+            }}>
+              <div style={{
+                display: "inline-block",
+                animation: "bounce 1s infinite alternate"
+              }}>
+                🦖 Excavating your notes... 🦕
+              </div>
+              <style>
+                {`
+                  @keyframes bounce {
+                    from { transform: translateY(0px); }
+                    to { transform: translateY(-10px); }
+                  }
+                `}
+              </style>
+            </div>
+          ) : notes.length === 0 ? (
+            <div style={{
+              textAlign: "center",
+              padding: "60px 20px",
+              backgroundColor: "white",
+              borderRadius: "12px",
+              boxShadow: "0 2px 4px rgba(0, 0, 0, 0.05)"
+            }}>
+              <div style={{ fontSize: "60px", marginBottom: "20px" }}>🦕</div>
+              <p style={{ 
+                fontSize: "18px", 
+                color: "#1E40AF",
+                marginBottom: "20px"
+              }}>
+                No fossil records found yet.
+              </p>
+              <button 
+                onClick={handleCreateNote}
+                style={{
+                  backgroundColor: "#F97316",
+                  color: "white",
+                  border: "none",
+                  borderRadius: "8px",
+                  padding: "12px 24px",
+                  fontSize: "16px",
+                  fontWeight: "bold",
+                  cursor: "pointer",
+                  boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)"
+                }}
+              >
+                Start Your First Note
+              </button>
+            </div>
+          ) : (
+            <div style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
+              gap: "20px",
+              marginTop: "20px"
+            }}>
+              {notes.map(note => (
+                <div 
+                  key={note._id} 
+                  style={{
+                    backgroundColor: "white",
+                    borderRadius: "10px",
+                    boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+                    overflow: "hidden",
+                    border: "3px solid #3B82F6",
+                    transition: "transform 0.2s",
+                    cursor: "pointer"
+                  }}
+                  onClick={() => handleEditNote(note._id)}
+                >
+                  <div style={{
+                    background: "linear-gradient(90deg, #3B82F6 0%, #60A5FA 100%)",
+                    padding: "15px",
+                    position: "relative"
+                  }}>
+                    <h3 style={{ 
+                      margin: "0",
+                      color: "white",
+                      fontSize: "18px",
+                      fontWeight: "bold",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      whiteSpace: "nowrap"
+                    }}>
+                      {note.title || "Untitled Note"}
+                    </h3>
+                    <div style={{
+                      position: "absolute",
+                      top: "8px",
+                      right: "8px",
+                      fontSize: "18px"
+                    }}>
+                      🦖
+                    </div>
+                  </div>
+                  
+                  <div style={{ 
+                    padding: "15px",
+                    background: "linear-gradient(to bottom, #FFFFFF, #F0F7FF)"
+                  }}>
+                    <div style={{
+                      overflow: "hidden",
+                      maxHeight: "100px",
+                      marginBottom: "15px",
+                      color: "#374151",
+                      fontSize: "14px"
+                    }}>
+                      {note.notes ? (
+                        <p style={{ margin: "0" }}>
+                          {note.notes.length > 100 
+                            ? note.notes.substring(0, 100) + "..." 
+                            : note.notes}
+                        </p>
+                      ) : <p style={{ margin: "0", fontStyle: "italic", color: "#9CA3AF" }}>No content</p>}
+                    </div>
+                    
+                    <div style={{
+                      borderTop: "1px solid #E5E7EB",
+                      paddingTop: "15px",
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center"
+                    }}>
+                      <span style={{ 
+                        color: "#6B7280",
+                        fontSize: "12px"
+                      }}>
+                        {new Date(Date.now()).toLocaleDateString()}
+                      </span>
+                      <div style={{ display: "flex", gap: "8px" }}>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleEditNote(note._id);
+                          }}
+                          style={{
+                            backgroundColor: "#3B82F6",
+                            color: "white",
+                            border: "none",
+                            borderRadius: "4px",
+                            padding: "6px 12px",
+                            fontSize: "12px",
+                            cursor: "pointer"
+                          }}
+                        >
+                          Edit
+                        </button>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDelete(note._id);
+                          }}
+                          style={{
+                            backgroundColor: "#EF4444",
+                            color: "white",
+                            border: "none",
+                            borderRadius: "4px",
+                            padding: "6px 12px",
+                            fontSize: "12px",
+                            cursor: "pointer"
+                          }}
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
-        )}
+              ))}
+            </div>
+          )}
+        </div>
+        
+        <div style={{ 
+          marginTop: "40px", 
+          textAlign: "center"
+        }}>
+          
+        </div>
       </div>
     </div>
   );
