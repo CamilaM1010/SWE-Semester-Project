@@ -9,6 +9,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Private from './pages/Private';
 import ResetPassword from './pages/ResetPassword';
+import Cornell from './pages/Cornell';
 
 // Protected route component
 const ProtectedRoute = ({ children }) => {
@@ -44,6 +45,14 @@ function App() {
                     <Private />
                   </ProtectedRoute>
                 } 
+              />
+              <Route
+                path="/notes/:noteId?"
+                element={
+                  <ProtectedRoute>
+                    <Cornell/>
+                  </ProtectedRoute>
+                }
               />
             </Routes>
           </div>

@@ -21,17 +21,22 @@ def create_note():
 
     data = request.json 
     print("Received data:", data)  # Debugging
-    title = data.get("title") 
-    content = data.get("content") 
+
+    title = data.get("title")
+    header = data.get("header")
+    notes = data.get("notes")
+    summary = data.get("summary")
 
     if not title: 
         return jsonify({"error": "Title is required"}), 400 
 
-    note = { 
-        "user": current_user.get_id(), 
-        "title": title, 
-        "content": content 
-    } 
+    note = {
+        "user": current_user.get_id(),
+        "title": title,
+        "header": header,
+        "notes": notes,
+        "summary": summary
+    }
  
 
     inserted_note = notes_collection.insert_one(note) 
@@ -52,17 +57,17 @@ def get_notes():
 
 
 # Get a single note 
-@notes_bp.route("/<note_id>", methods=["GET"]) #not implemented yet, for searching notes
+@notes_bp.route("/<note_id>", methods=["GET"]) #!!!!not implemented yet, for searching notes
 @login_required 
 def get_note(note_id): 
-    note = notes_collection.find_one({"_id": ObjectId(note_id), "user": current_user.get_id()}) 
+    note = notes_collection.find_one({"_id": ObjectId(note_id), "user": current_user.get_id()})
 
-    if not note: 
-        return jsonify({"error": "Note not found"}), 404 
+    if not note:
+        return jsonify({"error": "Note not found"}), 404
 
-    note["_id"] = str(note["_id"]) 
+    note["_id"] = str(note["_id"])
 
-    return jsonify(note), 200 
+    return jsonify(note), 200
 
  
 # Update a note 
@@ -75,8 +80,13 @@ def update_note(note_id):
         data = request.json
 
         updated_note = notes_collection.find_one_and_update(
-            {"_id": ObjectId(note_id)}, 
-            {"$set": {"title": data.get("title"), "content": data.get("content")}}, 
+           {"_id": ObjectId(note_id)},
+            {"$set": {
+                "title": data.get("title"),
+                "header": data.get("header"),
+                "notes": data.get("notes"),
+                "summary": data.get("summary")
+            }},
             return_document=True
         )
 
