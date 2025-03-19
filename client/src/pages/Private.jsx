@@ -68,11 +68,11 @@ const Private = () => {
           display: "flex", 
           justifyContent: "space-between", 
           alignItems: "center",
-          background: "linear-gradient(90deg, #1E40AF 0%, #3B82F6 100%)",
+          background: "linear-gradient(90deg, #0021A5 0%, #17a2b8 100%)",
           padding: "20px 30px",
           borderRadius: "12px",
           marginBottom: "30px",
-          boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)"
+          boxShadow: "0 4px 6px #2c3e50"
         }}>
           <div>
             <h1 style={{ 
@@ -85,7 +85,7 @@ const Private = () => {
               Welcome, {user?.username}! <span style={{ marginLeft: "10px" }}>🦖</span>
             </h1>
             <p style={{ 
-              color: "#FFB74D", 
+              color: "#17a2b8", 
               margin: "0",
               fontSize: "16px"
             }}>
@@ -96,7 +96,7 @@ const Private = () => {
           <button 
             onClick={handleCreateNote}
             style={{
-              backgroundColor: "#F97316",
+              backgroundColor: "#FA4616",
               color: "white",
               border: "none",
               borderRadius: "50px",
@@ -104,7 +104,7 @@ const Private = () => {
               fontSize: "16px",
               fontWeight: "bold",
               cursor: "pointer",
-              boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+              boxShadow: "0 4px 6px #2c3e50",
               display: "flex",
               alignItems: "center",
               transition: "transform 0.2s, background-color 0.2s"
@@ -122,9 +122,9 @@ const Private = () => {
               fontSize: "18px",
               color: "#1E40AF",
               fontWeight: "bold",
-              background: "rgba(255, 255, 255, 0.7)",
+              background: "#f8f9fa",
               borderRadius: "12px",
-              boxShadow: "0 2px 4px rgba(0, 0, 0, 0.05)"
+              boxShadow: "0 2px 4px #2c3e50"
             }}>
               <div style={{
                 display: "inline-block",
@@ -147,7 +147,7 @@ const Private = () => {
               padding: "60px 20px",
               backgroundColor: "white",
               borderRadius: "12px",
-              boxShadow: "0 2px 4px rgba(0, 0, 0, 0.05)"
+              boxShadow: "0 2px 4px #2c3e50"
             }}>
               <div style={{ fontSize: "60px", marginBottom: "20px" }}>🦕</div>
               <p style={{ 
@@ -168,7 +168,7 @@ const Private = () => {
                   fontSize: "16px",
                   fontWeight: "bold",
                   cursor: "pointer",
-                  boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)"
+                  boxShadow: "0 2px 4px #2c3e50"
                 }}
               >
                 Start Your First Note
@@ -187,16 +187,16 @@ const Private = () => {
                   style={{
                     backgroundColor: "white",
                     borderRadius: "10px",
-                    boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+                    boxShadow: "0 4px 6px #2c3e50",
                     overflow: "hidden",
-                    border: "3px solid #3B82F6",
+                    border: "3px solid #0021A5",
                     transition: "transform 0.2s",
                     cursor: "pointer"
                   }}
                   onClick={() => handleEditNote(note._id)}
                 >
                   <div style={{
-                    background: "linear-gradient(90deg, #3B82F6 0%, #60A5FA 100%)",
+                    background: "linear-gradient(90deg, #0021A5 0%, #17a2b8 100%)",
                     padding: "15px",
                     position: "relative"
                   }}>
@@ -242,7 +242,7 @@ const Private = () => {
                     </div>
                     
                     <div style={{
-                      borderTop: "1px solid #E5E7EB",
+                      borderTop: "1px solid #f8f9fa",
                       paddingTop: "15px",
                       display: "flex",
                       justifyContent: "space-between",
@@ -261,7 +261,7 @@ const Private = () => {
                             handleEditNote(note._id);
                           }}
                           style={{
-                            backgroundColor: "#3B82F6",
+                            backgroundColor: "#17a2b8",
                             color: "white",
                             border: "none",
                             borderRadius: "4px",

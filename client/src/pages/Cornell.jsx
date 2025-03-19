@@ -41,11 +41,11 @@ const CornellTemplate = () => {
           display: "flex", 
           justifyContent: "space-between", 
           alignItems: "center",
-          backgroundColor: "#1E40AF",
+          backgroundColor: "#0021A5",
           padding: "16px",
           borderRadius: "12px",
           marginBottom: "20px",
-          boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)"
+          boxShadow: "0 4px 6px #2c3e50"
         }}>
           <div>
             <h1 style={{ 
@@ -55,16 +55,16 @@ const CornellTemplate = () => {
               display: "flex",
               alignItems: "center"
             }}>
-              DY-Notes 🦖
+              DyNotes 🦖
             </h1>
-            <p style={{ color: "#FFB74D", margin: "4px 0 0 0" }}>Prehistoric note-taking</p>
+            <p style={{ color: "#17a2b8", margin: "4px 0 0 0" }}>Prehistoric note-taking</p>
           </div>
           
           <div style={{ display: "flex", gap: "12px" }}>
             <button
               onClick={() => navigate(-1)}
               style={{
-                backgroundColor: "#3B82F6",
+                backgroundColor: "#17a2b8",
                 color: "white",
                 border: "none",
                 borderRadius: "8px",
@@ -79,7 +79,7 @@ const CornellTemplate = () => {
             <button
               onClick={handleSave}
               style={{
-                backgroundColor: "#F97316",
+                backgroundColor: "#FA4616",
                 color: "white",
                 border: "none",
                 borderRadius: "8px",
@@ -87,7 +87,7 @@ const CornellTemplate = () => {
                 fontSize: "16px",
                 fontWeight: "bold",
                 cursor: "pointer",
-                boxShadow: "0 2px 4px rgba(0, 0, 0, 0.2)"
+                boxShadow: "0 2px 4px #2c3e50"
               }}
             >
               Save
@@ -100,14 +100,14 @@ const CornellTemplate = () => {
             <label style={{ 
               fontSize: "18px", 
               fontWeight: "bold", 
-              color: "#1E40AF"
+              color: "#0021A5"
             }}>
               Note Title
             </label>
             <span style={{ 
               marginLeft: "8px", 
               fontSize: "12px", 
-              color: "#F97316"
+              color: "#FA4616"
             }}>
               🦕 Make it prehistoric!
             </span>
@@ -120,7 +120,7 @@ const CornellTemplate = () => {
               width: "100%",
               padding: "12px",
               borderRadius: "8px",
-              border: "3px solid #3B82F6",
+              border: "3px solid #0021A5",
               fontSize: "16px",
               boxSizing: "border-box"
             }}
@@ -130,7 +130,7 @@ const CornellTemplate = () => {
         <div style={{ display: "flex", gap: "24px", marginBottom: "24px" }}>
           <div style={{ flex: "1", maxWidth: "33%" }}>
             <div style={{ 
-              backgroundColor: "#3B82F6", 
+              backgroundColor: "#0021A5", 
               color: "white",
               padding: "10px",
               borderTopLeftRadius: "8px",
@@ -142,7 +142,7 @@ const CornellTemplate = () => {
                 <span style={{ 
                   marginLeft: "8px", 
                   fontSize: "12px", 
-                  color: "#FFB74D"
+                  color: "#17a2b8"
                 }}>
                   Dino Tracks
                 </span>
@@ -158,7 +158,7 @@ const CornellTemplate = () => {
                 padding: "12px",
                 borderBottomLeftRadius: "8px",
                 borderBottomRightRadius: "8px",
-                border: "3px solid #3B82F6",
+                border: "3px solid #0021A5",
                 borderTop: "none",
                 boxSizing: "border-box",
                 resize: "none"
@@ -168,7 +168,7 @@ const CornellTemplate = () => {
           
           <div style={{ flex: "2", maxWidth: "67%" }}>
             <div style={{ 
-              backgroundColor: "#F97316", 
+              backgroundColor: "#FA4616", 
               color: "white",
               padding: "10px",
               borderTopLeftRadius: "8px",
@@ -180,7 +180,7 @@ const CornellTemplate = () => {
                 <span style={{ 
                   marginLeft: "8px", 
                   fontSize: "12px", 
-                  color: "#DBEAFE"
+                  color: "#f8f9fa"
                 }}>
                   Fossil Records
                 </span>
@@ -196,7 +196,7 @@ const CornellTemplate = () => {
                 padding: "12px",
                 borderBottomLeftRadius: "8px",
                 borderBottomRightRadius: "8px",
-                border: "3px solid #F97316",
+                border: "3px solid #FA4616",
                 borderTop: "none",
                 boxSizing: "border-box",
                 resize: "none"
@@ -207,7 +207,7 @@ const CornellTemplate = () => {
         
         <div>
           <div style={{ 
-            background: "linear-gradient(90deg, #3B82F6 0%, #F97316 100%)", 
+            background: "linear-gradient(90deg, #0021A5 0%, #FA4616 100%)", 
             color: "white",
             padding: "10px",
             borderTopLeftRadius: "8px",
@@ -219,7 +219,7 @@ const CornellTemplate = () => {
               <span style={{ 
                 marginLeft: "8px", 
                 fontSize: "12px", 
-                color: "#FEFCE8"
+                color: "#f8f9fa"
               }}>
                 Extinction-Proof Insights
               </span>
@@ -235,8 +235,8 @@ const CornellTemplate = () => {
               padding: "12px",
               borderBottomLeftRadius: "8px",
               borderBottomRightRadius: "8px",
-              border: "3px solid #3B82F6",
-              borderRight: "3px solid #F97316",
+              border: "linear-gradient(90deg, #0021A5 0%, #FA4616 100%)",
+              borderRight: "3px solid #FA4616",
               borderTop: "none",
               boxSizing: "border-box",
               resize: "none"
@@ -250,13 +250,13 @@ const CornellTemplate = () => {
         }}>
           <div style={{ 
             display: "inline-block",
-            background: "linear-gradient(90deg, #3B82F6 0%, #F97316 100%)",
+            background: "linear-gradient(90deg, #0021A5 0%, #FA4616 100%)",
             padding: "8px 16px",
             borderRadius: "24px",
             color: "white",
             fontWeight: "bold"
           }}>
-            DY-Notes: Taking notes that will stand the test of time 🦖
+            DyNotes: Taking notes that will stand the test of time 🦖
           </div>
         </div>
       </div>
