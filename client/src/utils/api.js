@@ -44,10 +44,45 @@ const request = async (endpoint, method = 'GET', data = null) => {
 // API functions
 export const api = {
   // Notes
-  getNotes: () => request('/api/notes'),
-  createNote: (noteData) => request('/api/notes', 'POST', noteData),
-  updateNote: (id, noteData) => request(`/api/notes/${id}`, 'PUT', noteData),
-  deleteNote: (id) => request(`/api/notes/${id}`, 'DELETE'),
+  getNotes: async () => {
+    const response = await fetch(`${API_BASE_URL}/api/notes`, { credentials: 'include' });
+    if (!response.ok) throw new Error('Failed to fetch notes');
+    return response.json();
+  },
+
+  getNote: (id) => request(`/api/notes/${id}`),
+
+  createNote: async (noteData) => {
+    const response = await fetch("/api/notes/", {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify(noteData),
+    });
+    if (!response.ok) throw new Error('Failed to create note');
+    return response.json();
+  },
+
+  updateNote: async (noteId, updatedNote) => {
+    if (!noteId) throw new Error("Note ID is undefined");  // Add this check
+    const response = await fetch(`${API_BASE_URL}/api/notes/${noteId}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify(updatedNote),
+    });
+    if (!response.ok) throw new Error("Failed to update note");
+    return response.json();
+  },
+
+  deleteNote: async (id) => {
+    const response = await fetch(`${API_BASE_URL}/api/notes/${id}`, {
+      method: 'DELETE',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+    });
+    if (!response.ok) throw new Error('Failed to delete note');
+  },
   
   // User profile
   getProfile: () => request('/api/profile'),
