@@ -24,12 +24,6 @@ login.login_view = 'api_login'
 
 app.register_blueprint(notes_bp, url_prefix='/api/notes')
 
-# def get_database(dbname):
-#     # Get MongoDB connection string from environment variable
-#     CONNECTION_STRING = "mongodb+srv://aydinoznil:2fMUpD87WDNctc@cluster0.6p2s0.mongodb.net/"
-#     client = MongoClient(CONNECTION_STRING)
-#     return client[dbname]
-
 @login.user_loader
 def load_user(username):
     db = get_database("user_auth")

@@ -1,7 +1,13 @@
 from pymongo import MongoClient 
+from dotenv import load_dotenv
+import os
+
+# Load environment variables from .env file
+load_dotenv()
+
+# Get MongoDB connection string from environment variable
+CONNECTION_STRING = os.getenv("MONGO_URI")
 
 def get_database(dbname):
-    # Get MongoDB connection string from environment variable
-    CONNECTION_STRING = "mongodb+srv://aydinoznil:2fMUpD87WDNctc@cluster0.6p2s0.mongodb.net/"
     client = MongoClient(CONNECTION_STRING)
     return client[dbname]
