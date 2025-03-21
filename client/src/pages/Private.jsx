@@ -6,7 +6,9 @@ import { useNavigate } from "react-router-dom";
 const Private = () => {
   const { user } = useAuth();
   const [notes, setNotes] = useState([]);
+  const [filteredNotes, setFilteredNotes] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -16,7 +18,7 @@ const Private = () => {
         const response = await api.getNotes(); // Fetch notes from the API
         console.log("Fetched notes:", response);
         setNotes(response || []); // Set notes state with the fetched data
-
+        setFilteredNotes(response || []); // Initially, filtered notes are all notes
       } catch (error) {
         console.error('Error fetching notes:', error);
       } finally {
@@ -26,6 +28,22 @@ const Private = () => {
 
     fetchNotes();
   }, []);
+
+  // Handle search input changes
+  const handleSearchChange = (e) => {
+    const term = e.target.value;
+    setSearchTerm(term);
+    
+    // Filter notes based on search term
+    if (term.trim() === '') {
+      setFilteredNotes(notes); // If search is empty, show all notes
+    } else {
+      const filtered = notes.filter(note => 
+        note.title && note.title.toLowerCase().includes(term.toLowerCase())
+      );
+      setFilteredNotes(filtered);
+    }
+  };
 
   const handleDelete = async (noteId) => {
     if (!window.confirm("Are you sure you want to delete this note?")) return;
@@ -38,7 +56,11 @@ const Private = () => {
       }
   
       await api.deleteNote(noteId);
-      setNotes(prevNotes => prevNotes.filter(note => note._id !== noteId)); // Remove from UI
+      const updatedNotes = notes.filter(note => note._id !== noteId);
+      setNotes(updatedNotes); // Update the full notes array
+      setFilteredNotes(updatedNotes.filter(note => 
+        note.title && note.title.toLowerCase().includes(searchTerm.toLowerCase())
+      )); // Update the filtered notes
     } catch (error) {
       console.error('Error deleting note:', error);
     }
@@ -113,6 +135,56 @@ const Private = () => {
             <span style={{ marginRight: "8px" }}>🦕</span> Create New Note
           </button>
         </div>
+
+        {/* Search Bar */}
+        <div style={{
+          marginBottom: "20px",
+          background: "white",
+          padding: "15px",
+          borderRadius: "10px",
+          boxShadow: "0 2px 4px #2c3e50"
+        }}>
+          <div style={{
+            display: "flex",
+            alignItems: "center",
+            width: "97%",
+            border: "2px solid #0021A5",
+            borderRadius: "50px",
+            padding: "5px 15px",
+            backgroundColor: "white"
+          }}>
+            <span style={{ marginRight: "10px", fontSize: "18px" }}>🔍</span>
+            <input
+              type="text"
+              placeholder="Search notes by title..."
+              value={searchTerm}
+              onChange={handleSearchChange}
+              style={{
+                border: "none",
+                outline: "none",
+                width: "100%",
+                padding: "8px",
+                fontSize: "16px"
+              }}
+            />
+            {searchTerm && (
+              <button
+                onClick={() => {
+                  setSearchTerm('');
+                  setFilteredNotes(notes);
+                }}
+                style={{
+                  background: "none",
+                  border: "none",
+                  cursor: "pointer",
+                  fontSize: "18px"
+                }}
+              >
+                ✕
+              </button>
+            )}
+          </div>
+        </div>
         
         <div>
           {loading ? (
@@ -141,7 +213,7 @@ const Private = () => {
                 `}
               </style>
             </div>
-          ) : notes.length === 0 ? (
+          ) : filteredNotes.length === 0 ? (
             <div style={{
               textAlign: "center",
               padding: "60px 20px",
@@ -149,30 +221,57 @@ const Private = () => {
               borderRadius: "12px",
               boxShadow: "0 2px 4px #2c3e50"
             }}>
-              <div style={{ fontSize: "60px", marginBottom: "20px" }}>🦕</div>
+              <div style={{ fontSize: "60px", marginBottom: "20px" }}>
+                {searchTerm ? '🔍' : '🦕'}
+              </div>
               <p style={{ 
                 fontSize: "18px", 
                 color: "#1E40AF",
                 marginBottom: "20px"
               }}>
-                No fossil records found yet.
+                {searchTerm 
+                  ? `No notes found matching "${searchTerm}"`
+                  : "No fossil records found yet."}
               </p>
-              <button 
-                onClick={handleCreateNote}
-                style={{
-                  backgroundColor: "#F97316",
-                  color: "white",
-                  border: "none",
-                  borderRadius: "8px",
-                  padding: "12px 24px",
-                  fontSize: "16px",
-                  fontWeight: "bold",
-                  cursor: "pointer",
-                  boxShadow: "0 2px 4px #2c3e50"
-                }}
-              >
-                Start Your First Note
-              </button>
+              {!searchTerm && (
+                <button 
+                  onClick={handleCreateNote}
+                  style={{
+                    backgroundColor: "#F97316",
+                    color: "white",
+                    border: "none",
+                    borderRadius: "8px",
+                    padding: "12px 24px",
+                    fontSize: "16px",
+                    fontWeight: "bold",
+                    cursor: "pointer",
+                    boxShadow: "0 2px 4px #2c3e50"
+                  }}
+                >
+                  Start Your First Note
+                </button>
+              )}
+              {searchTerm && (
+                <button 
+                  onClick={() => {
+                    setSearchTerm('');
+                    setFilteredNotes(notes);
+                  }}
+                  style={{
+                    backgroundColor: "#0021A5",
+                    color: "white",
+                    border: "none",
+                    borderRadius: "8px",
+                    padding: "12px 24px",
+                    fontSize: "16px",
+                    fontWeight: "bold",
+                    cursor: "pointer",
+                    boxShadow: "0 2px 4px #2c3e50"
+                  }}
+                >
+                  Clear Search
+                </button>
+              )}
             </div>
           ) : (
             <div style={{
@@ -181,7 +280,7 @@ const Private = () => {
               gap: "20px",
               marginTop: "20px"
             }}>
-              {notes.map(note => (
+              {filteredNotes.map(note => (
                 <div 
                   key={note._id} 
                   style={{
@@ -298,12 +397,17 @@ const Private = () => {
           )}
         </div>
         
-        <div style={{ 
-          marginTop: "40px", 
-          textAlign: "center"
-        }}>
-          
-        </div>
+        {/* Search results count - show when search is active */}
+        {searchTerm && filteredNotes.length > 0 && (
+          <div style={{ 
+            marginTop: "20px", 
+            textAlign: "center",
+            color: "#1E40AF",
+            fontWeight: "bold"
+          }}>
+            Found {filteredNotes.length} note{filteredNotes.length !== 1 ? 's' : ''} matching "{searchTerm}"
+          </div>
+        )}
       </div>
     </div>
   );
