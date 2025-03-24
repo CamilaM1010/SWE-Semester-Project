@@ -351,7 +351,11 @@ const Private = () => {
                         color: "#6B7280",
                         fontSize: "12px"
                       }}>
-                        {new Date(Date.now()).toLocaleDateString()}
+                          {note.edited && new Date(note.edited).toDateString() !== new Date(note.created).toDateString() ? 
+                        <span>Edited: {new Date(note.edited).toLocaleDateString()}</span> : null}
+
+                        {note.edited && new Date(note.edited).toDateString() == new Date(note.created).toDateString() ? 
+                        <span>Edited: {new Date(note.created).toLocaleDateString()}</span> : null}
                       </span>
                       <div style={{ display: "flex", gap: "8px" }}>
                         <button
