@@ -4,6 +4,7 @@ from bson import ObjectId
 from flask_login import login_required, current_user 
 from database import get_database 
 from flask_cors import cross_origin
+import datetime
 
 # Create Blueprint for notes 
 notes_bp = Blueprint("notes", __name__) 
@@ -35,7 +36,9 @@ def create_note():
         "title": title,
         "header": header,
         "notes": notes,
-        "summary": summary
+        "summary": summary,
+        "created": datetime.datetime.utcnow(),
+        "edited": datetime.datetime.utcnow()
     }
  
 
@@ -85,7 +88,8 @@ def update_note(note_id):
                 "title": data.get("title"),
                 "header": data.get("header"),
                 "notes": data.get("notes"),
-                "summary": data.get("summary")
+                "summary": data.get("summary"),
+                "edited": datetime.datetime.utcnow()
             }},
             return_document=True
         )
