@@ -6,9 +6,14 @@ import { useNavigate } from "react-router-dom";
 const Private = () => {
   const { user } = useAuth();
   const [notes, setNotes] = useState([]);
+  const [folders, setFolders] = useState([]);
   const [filteredNotes, setFilteredNotes] = useState([]);
+  const [filteredFolders, setFilteredFolders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
+  const [isFolderModalOpen, setIsFolderModalOpen] = useState(false); // State to control folder modal visibility
+  const [folderNameModal, setFolderNameModal] = useState(''); // State to hold the folder name for modal input
+  const [folderDescriptionModal, setFolderDescriptionModal] = useState(''); // State to hold the folder description for modal input
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -16,15 +21,20 @@ const Private = () => {
     const fetchNotes = async () => {
       try {
         const response = await api.getNotes(); // Fetch notes from the API
+        const responseFolders = await api.getFolders(); // Fetch folders from the API
         console.log("Fetched notes:", response);
+        console.log("Fetched folders:", responseFolders);
         setNotes(response || []); // Set notes state with the fetched data
+        setFolders(responseFolders || []); // Set folders state with the fetched data
         setFilteredNotes(response || []); // Initially, filtered notes are all notes
+        setFilteredFolders(responseFolders || []); // Initially, filtered folders are all folders
       } catch (error) {
         console.error('Error fetching notes:', error);
       } finally {
         setLoading(false);
       }
     };
+    
 
     fetchNotes();
   }, []);
@@ -42,6 +52,16 @@ const Private = () => {
         note.title && note.title.toLowerCase().includes(term.toLowerCase())
       );
       setFilteredNotes(filtered);
+    }
+
+    // Filter folders based on search term
+    if (term.trim() === '') {
+      setFilteredFolders(folders); // If search is empty, show all folders
+    } else {
+      const filtered = folders.filter(folder => 
+        folder.name && folder.name.toLowerCase().includes(term.toLowerCase())
+      );
+      setFilteredFolders(filtered);
     }
   };
 
@@ -75,6 +95,55 @@ const Private = () => {
     navigate("/notes", { state: {note: noteToEdit} }); // Open note in Cornell template
   };
 
+  const handleCreateFolder = () => {
+    setIsFolderModalOpen(true); // Open the folder creation modal
+    setFolderNameModal(''); // Reset folder name input
+    setFolderDescriptionModal(''); // Reset folder description input
+  };
+
+  const handleSaveFolder = async () => {
+    try{
+      if (!folderNameModal.trim()) {
+        alert("Folder name cannot be empty.");
+        return;
+      }
+      
+      const newFolder = {
+        name: folderNameModal,
+        description: folderDescriptionModal
+      };
+
+      const response = await api.createFolder(newFolder); // Call API to create folder
+      console.log('Response from createFolder:', response);
+      if (response.folder_id) {
+        setFolders([...folders, { 
+          _id: response.folder_id, 
+          name: folderNameModal, 
+          description: folderDescriptionModal 
+      }]);
+      setIsFolderModalOpen(false); // Close the modal
+      setFolderNameModal('');
+      setFolderDescriptionModal('');
+      } 
+      else {
+        alert("Failed to create folder. Please try again.");
+      }
+    }
+    catch (error) {
+      console.error('Error creating folder:', error);
+    }
+  };
+
+  const handleCancelFolder = () => {
+    // Function to handle canceling folder creation
+    setIsFolderModalOpen(false); // Close the folder creation modal
+    setFolderNameModal(''); // Reset folder name input
+    setFolderDescriptionModal(''); // Reset folder description input
+  };
+
+  const handleFolderClick = (folderId) => {
+    navigate("/folder");
+  };
 
   return (
     <div style={{ 
@@ -114,6 +183,48 @@ const Private = () => {
               Your prehistoric notes collection
             </p>
           </div>
+    
+          <button 
+            onClick={handleCreateFolder}
+            style={{
+              backgroundColor: "#FA4616",
+              color: "white",
+              border: "none",
+              borderRadius: "50px",
+              padding: "14px 30px",
+              fontSize: "16px",
+              fontWeight: "bold",
+              cursor: "pointer",
+              boxShadow: "0 4px 6px #2c3e50",
+              display: "flex",
+              alignItems: "center",
+              transition: "transform 0.2s, background-color 0.2s",
+              marginLeft: "400px"
+            }}
+          >
+            <span style={{ marginRight: "8px" }}>🦕</span> Create New Folder
+          </button>
+
+          {isFolderModalOpen && (
+            <div className="modal-background">
+              <div className="modal-content">
+                <h2>Create New Folder</h2>
+                <input
+                type="text"
+                placeholder="Folder Name"
+                value={folderNameModal}
+                onChange={(e) => setFolderNameModal(e.target.value)}
+                />
+                <textarea
+                placeholder="Folder Description"
+                value={folderDescriptionModal}
+                onChange={(e) => setFolderDescriptionModal(e.target.value)}
+                 ></textarea>
+                <button onClick={handleSaveFolder}>Save</button>
+               <button onClick={handleCancelFolder}>Cancel</button>
+              </div>
+            </div>
+          )}
 
           <button 
             onClick={handleCreateNote}
@@ -135,7 +246,7 @@ const Private = () => {
             <span style={{ marginRight: "8px" }}>🦕</span> Create New Note
           </button>
         </div>
-
+    
         {/* Search Bar */}
         <div style={{
           marginBottom: "20px",
@@ -186,6 +297,59 @@ const Private = () => {
           </div>
         </div>
         
+        {/* Folders Section */}
+        <div style={{
+          marginBottom: "30px"
+        }}>
+          {folders && folders.length > 0 && (
+            <div style={{
+              marginBottom: "20px"
+            }}>
+              <h3 style={{
+                fontSize: "20px",
+                color: "#0021A5",
+                fontWeight: "bold"
+              }}>
+                Your Folders
+              </h3>
+              <div style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))",
+                gap: "20px"
+              }}>
+                {folders.map((folder) => (
+                  <div 
+                    key={folder._id}
+                    style={{
+                      backgroundColor: "#FFF",
+                      borderRadius: "10px",
+                      boxShadow: "0 4px 6px #2c3e50",
+                      overflow: "hidden",
+                      border: "2px solid #17a2b8",
+                      cursor: "pointer",
+                      padding: "15px",
+                      textAlign: "center"
+                    }}
+                    onClick={() => handleFolderClick(folder._id)}
+                  >
+                    <h4 style={{ margin: "0", color: "#17a2b8" }}>
+                      {folder.name}
+                    </h4>
+                    <p style={{
+                      fontSize: "14px",
+                      color: "#6B7280",
+                      marginTop: "10px"
+                    }}>
+                      {folder.description}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+    
+        {/* Notes/Folder display section */}
         <div>
           {loading ? (
             <div style={{
@@ -353,9 +517,9 @@ const Private = () => {
                       }}>
                           {note.edited && new Date(note.edited).toDateString() !== new Date(note.created).toDateString() ? 
                         <span>Edited: {new Date(note.edited).toLocaleDateString()}</span> : null}
-
-                        {note.edited && new Date(note.edited).toDateString() == new Date(note.created).toDateString() ? 
-                        <span>Edited: {new Date(note.created).toLocaleDateString()}</span> : null}
+    
+                          {note.edited && new Date(note.edited).toDateString() == new Date(note.created).toDateString() ? 
+                          <span>Edited: {new Date(note.created).toLocaleDateString()}</span> : null}
                       </span>
                       <div style={{ display: "flex", gap: "8px" }}>
                         <button
@@ -413,7 +577,7 @@ const Private = () => {
           </div>
         )}
       </div>
-    </div>
+    </div>    
   );
 };
 

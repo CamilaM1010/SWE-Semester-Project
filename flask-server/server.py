@@ -10,6 +10,7 @@ from database import get_database
 from notes import notes_bp
 import secrets
 import datetime
+from folders import folder_bp
 
 load_dotenv()
 app = Flask(__name__, static_folder='../client/build')
@@ -18,11 +19,13 @@ app.secret_key = os.getenv("FLASK_SECRET_KEY", secrets.token_hex(16)).encode()
 # Enable CORS for development
 CORS(app, supports_credentials=True)
 CORS(notes_bp, supports_credentials=True)
+CORS(folder_bp, supports_credentials=True)
 
 login = LoginManager(app)
 login.login_view = 'api_login'
 
 app.register_blueprint(notes_bp, url_prefix='/api/notes')
+app.register_blueprint(folder_bp, url_prefix='/api/folders')
 
 @login.user_loader
 def load_user(username):

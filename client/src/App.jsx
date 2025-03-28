@@ -10,6 +10,7 @@ import Register from './pages/Register';
 import Private from './pages/Private';
 import ResetPassword from './pages/ResetPassword';
 import Cornell from './pages/Cornell';
+import Folder from './pages/Folder'; 
 
 // Protected route component
 const ProtectedRoute = ({ children }) => {
@@ -54,6 +55,14 @@ function App() {
                   </ProtectedRoute>
                 }
               />
+              <Route
+                path="/folder/:folderId?"
+                element={
+                  <ProtectedRoute>
+                    <Folder/>
+                  </ProtectedRoute>
+                }
+                />
             </Routes>
           </div>
         </div>

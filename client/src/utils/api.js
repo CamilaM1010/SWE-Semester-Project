@@ -87,6 +87,48 @@ export const api = {
   // User profile
   getProfile: () => request('/api/profile'),
   updateProfile: (profileData) => request('/api/profile', 'PUT', profileData),
+
+  // Folders
+  getFolders: async() => {
+    const response = await fetch(`${API_BASE_URL}/api/folders`, { credentials: 'include' });
+    if (!response.ok) throw new Error('Failed to fetch folders');
+    return response.json();
+  },
+
+  getFolder: (id) => request(`/api/folders/${id}`),
+
+  createFolder: async (folderData) => {
+    const response = await fetch("/api/folders/", {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify(folderData),
+    });
+    if (!response.ok) throw new Error('Failed to create folder');
+    return response.json();
+  },
+
+  updateFolder: async (folderId, updatedFolder) => {
+    if (!folderId) throw new Error("Folder ID is undefined");  // Add this check
+    const response = await fetch(`${API_BASE_URL}/api/folders/${folderId}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify(updatedFolder),
+    });
+    if (!response.ok) throw new Error("Failed to update folder");
+    return response.json();
+  },
+
+  deleteFolder: async (id) => {
+    const response = await fetch(`${API_BASE_URL}/api/folders/${id}`, {
+      method: 'DELETE',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+    });
+    if (!response.ok) throw new Error('Failed to delete folder');
+  },
+
 };
 
 export default api;
