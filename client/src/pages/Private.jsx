@@ -142,7 +142,8 @@ const Private = () => {
   };
 
   const handleFolderClick = (folderId) => {
-    navigate("/folder");
+    const folderClicked = folders.find(folder => folder._id === folderId);
+    navigate("/folder", { state: folderClicked }); // Open note in Cornell template
   };
 
   return (
@@ -349,7 +350,7 @@ const Private = () => {
           )}
         </div>
     
-        {/* Notes/Folder display section */}
+        {/* Notes display section */}
         <div>
           {loading ? (
             <div style={{
@@ -518,7 +519,7 @@ const Private = () => {
                           {note.edited && new Date(note.edited).toDateString() !== new Date(note.created).toDateString() ? 
                         <span>Edited: {new Date(note.edited).toLocaleDateString()}</span> : null}
     
-                          {note.edited && new Date(note.edited).toDateString() == new Date(note.created).toDateString() ? 
+                          {note.edited && new Date(note.edited).toDateString() === new Date(note.created).toDateString() ? 
                           <span>Edited: {new Date(note.created).toLocaleDateString()}</span> : null}
                       </span>
                       <div style={{ display: "flex", gap: "8px" }}>

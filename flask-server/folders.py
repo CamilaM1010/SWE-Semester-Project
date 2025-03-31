@@ -32,6 +32,7 @@ def create_folder():
         "user": current_user.get_id(),
         "name": name,
         "description": description,
+        "notes": [],
         "created": datetime.datetime.utcnow(),
         "edited": datetime.datetime.utcnow()
     }
@@ -51,6 +52,16 @@ def get_folders():
         folder["_id"] = str(folder["_id"])
 
     return jsonify(user_folders), 200
+
+@folder_bp.route("/<folder_id>", methods=["GET"])
+@login_required
+def get_folder(folder_id):
+    folder = folder_collection.find_one({"_id": ObjectId(folder_id), "user": current_user.get_id()})
+    if not folder:
+        return jsonify({"error": "Folder not found"}), 404
+
+    folder["_id"] = str(folder["_id"])
+    return jsonify(folder), 200
 
 #Get all notes in a specific folder
 @folder_bp.route("/<folder_id>/notes", methods=["GET"])

@@ -18,8 +18,8 @@ app.secret_key = os.getenv("FLASK_SECRET_KEY", secrets.token_hex(16)).encode()
 
 # Enable CORS for development
 CORS(app, supports_credentials=True)
-CORS(notes_bp, supports_credentials=True)
-CORS(folder_bp, supports_credentials=True)
+# CORS(notes_bp, supports_credentials=True)
+# CORS(folder_bp, supports_credentials=True)
 
 login = LoginManager(app)
 login.login_view = 'api_login'
