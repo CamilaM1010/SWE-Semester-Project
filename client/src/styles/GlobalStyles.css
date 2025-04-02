@@ -365,3 +365,96 @@ body {
     padding-top: 15px;
     border-top: 1px solid #eee;
 }
+
+/* Custom styles for Quill editor */
+
+.ql-toolbar.ql-snow {
+    background-color: #f0f7ff;
+    border-radius: 4px 4px 0 0;
+    border-color: transparent;
+    padding: 8px;
+}
+  
+.ql-container.ql-snow {
+    border-color: transparent;
+    font-size: 14px;
+    height: calc(100% - 50px);
+}
+  
+.ql-editor {
+    padding: 12px;
+    min-height: 100px;
+    height: 100%;
+    overflow-y: auto;
+    background-color: white;
+}
+  
+/* Custom tooltip for formatting buttons */
+
+.ql-tooltip {
+    background-color: #0021A5;
+    color: white;
+    border-radius: 4px;
+    padding: 5px 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+  
+/* Custom colors for highlight options */
+
+.ql-picker-options [data-value="yellow"] {
+    background-color: #ffeb3b;
+}
+  
+.ql-picker-options [data-value="green"] {
+    background-color: #a5d6a7;
+}
+  
+.ql-picker-options [data-value="blue"] {
+    background-color: #bbdefb;
+}
+  
+.ql-picker-options [data-value="purple"] {
+    background-color: #d1c4e9;
+}
+  
+.ql-picker-options [data-value="red"] {
+    background-color: #ffcdd2;
+}
+  
+/* Fix editor inside container sizing */
+
+.cornell-editor-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+  
+/* Add animation for toolbar */
+
+.ql-toolbar.ql-snow {
+    transition: background-color 0.3s ease;
+}
+  
+.ql-toolbar.ql-snow:hover {
+    background-color: #e3efff;
+}
+  
+/* Custom styling for formatting */
+
+.ql-editor strong {
+    color: #000000;
+}
+  
+.ql-editor em {
+    color: #000000;
+}
+  
+.ql-editor u {
+    text-decoration-color: #000000;
+}
+  
+/* Focus state */
+
+.ql-container.ql-snow:focus-within {
+    box-shadow: 0 0 0 2px rgba(0, 33, 165, 0.2);
+}
