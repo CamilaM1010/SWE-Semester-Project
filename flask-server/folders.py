@@ -88,7 +88,7 @@ def move_note_to_folder(folder_id, note_id):
     notes_collection.update_one({"_id": ObjectId(note_id)}, {"$addToSet": {"folder_id": folder_id}})
     folder_collection.update_one({"_id": ObjectId(folder_id)}, {"$addToSet": {"notes": note_id}})
 
-    return jsonify({"message": "Note moved to folder"}), 200
+    return jsonify(success=True, message="Note moved to folder"), 200
 
 @folder_bp.route("/<folder_id>/notes/<note_id>", methods=["PUT"])
 @login_required

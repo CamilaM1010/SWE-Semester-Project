@@ -136,6 +136,7 @@ export const api = {
       headers: { 'Content-Type': 'application/json' },
     });
     if (!response.ok) throw new Error('Failed to move note in folder');
+    return response.json();
   },
 
   moveNoteOutFolder: async (noteId, folderId) => {

@@ -178,7 +178,7 @@ const Private = () => {
           delete updated[noteId];
           return updated;
         }); // Clear the selected folder for the moved note
-        alert("Note moved successfully!");
+        //alert("Note moved successfully!");
       } else {
         alert("Failed to move note. Please try again.");
       }
