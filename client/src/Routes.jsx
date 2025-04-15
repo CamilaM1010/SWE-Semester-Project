@@ -6,6 +6,7 @@ import Register from './pages/Register';
 import ResetPassword from './pages/ResetPassword';
 import Private from './pages/Private';
 import { useAuth } from './utils/auth';
+import QuizGenerator from './pages/QuizGenerator';
 
 const ProtectedRoute = ({ children }) => {
   const { user } = useAuth();
@@ -22,14 +23,9 @@ function AppRoutes() {
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/reset-password" element={<ResetPassword />} />
-      <Route 
-        path="/private" 
-        element={
-          <ProtectedRoute>
-            <Private />
-          </ProtectedRoute>
-        } 
-      />
+      <Route path="/private" element={ <ProtectedRoute><Private /></ProtectedRoute>} />
+      <Route path="/quiz-test" element={<ProtectedRoute><QuizGenerator /> </ProtectedRoute>}/>
+
     </Routes>
   );
 }
