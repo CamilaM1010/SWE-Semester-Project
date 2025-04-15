@@ -90,20 +90,19 @@ def move_note_to_folder(folder_id, note_id):
 
     return jsonify(success=True, message="Note moved to folder"), 200
 
-@folder_bp.route("/<folder_id>/notes/<note_id>", methods=["PUT"])
+@folder_bp.route("/notes/<note_id>", methods=["PUT"])
 @login_required
-def move_note_out_folder(folder_id, note_id):
+def move_note_out_all_folder(note_id):
     note = notes_collection.find_one({"_id": ObjectId(note_id), "user": current_user.get_id()})
-    folder = folder_collection.find_one({"_id": ObjectId(folder_id), "user": current_user.get_id()})
-    if not folder:
-        return jsonify({"error": "Folder not found"}), 404
     if not note:
         return jsonify({"error": "Note not found"}), 404
-
-    notes_collection.update_one({"_id": ObjectId(note_id)}, {"$pull": {"folder_id": folder_id}})
-    folder_collection.update_one({"_id": ObjectId(folder_id)}, {"$pull": {"notes": note_id}})
-
-    return jsonify({"message": "Note moved out of folder"}), 200
+    
+    notes_collection.update_one({"_id": ObjectId(note_id)}, {"$set": {"folder_id": []}})
+    folder_collection.update_many(
+    {"notes": note_id},
+    {"$pull": {"notes": note_id}}
+    )
+    return jsonify(success=True, message="Note moved out of all folders"), 200
 
 #Delete a folder
 @folder_bp.route("/<folder_id>", methods=["DELETE"])

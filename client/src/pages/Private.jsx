@@ -155,6 +155,14 @@ const Private = () => {
     const folderClicked = folders.find(folder => folder._id === folderId);
     navigate("/folder", { state: folderClicked }); // Open note in Cornell template
   };
+  
+  const handleMoveNoteToFolder = (folderId) => {
+    if (noteToMove) {
+      handleMoveNote(noteToMove, folderId);
+      setMoveModalOpen(false);
+      setNoteToMove(null);
+    }
+  };
 
   const handleMoveNote = async (noteId, folderId) => {
     if (!folderId) {
@@ -163,15 +171,15 @@ const Private = () => {
     }
 
     try {
-      const response = await api.moveNoteToFolder(noteId, folderId); // Call API to move note
+      const response = await api.moveNoteToFolder(folderId, noteId); // Call API to move note
       console.log('Response from moveNoteToFolder:', response);
       if (response.success) {
-        const updatedNotes = notes.filter(note => note._id !== noteId); // Remove the note from the current list
+        //const updatedNotes = notes.filter(note => note._id !== noteId); // Remove the note from the current list
 
-        setNotes(updatedNotes); // Update the notes state with the moved note
-        setFilteredNotes(updatedNotes.filter(note => 
-          note.title && note.title.toLowerCase().includes(searchTerm.toLowerCase())
-        )); // Update the filtered notes
+        //setNotes(updatedNotes); // Update the notes state with the moved note
+        // setFilteredNotes(updatedNotes.filter(note => 
+        //   note.title && note.title.toLowerCase().includes(searchTerm.toLowerCase())
+        // )); // Update the filtered notes
 
         setSelectedFolder(prev => {
           const updated = { ...prev };
@@ -192,13 +200,7 @@ const Private = () => {
     setMoveModalOpen(true);
   };
 
-  const handleMoveNoteToFolder = (folderId) => {
-    if (noteToMove) {
-      handleMoveNote(noteToMove, folderId);
-      setMoveModalOpen(false);
-      setNoteToMove(null);
-    }
-  };
+ 
 
   const handleFolderDelete = async (folderId) => {
     if (!window.confirm("Are you sure you want to delete this folder?")) return;
@@ -211,6 +213,40 @@ const Private = () => {
       console.error('Error deleting folder:', error);
     }
   }
+
+  const handleRemoveAll = () => {
+    if (noteToMove) {
+      handleRemoveFromAllFolders(noteToMove);
+      setMoveModalOpen(false);
+      setNoteToMove(null);
+    }
+  };
+
+  const handleRemoveFromAllFolders = async (noteId) => {
+    try {
+      const response = await api.moveNoteOutAllFolder(noteId); // Call API to move note out of folder
+      console.log('Response from moveNoteOutFolder:', response);
+      if (response.success) {
+        //const updatedNotes = notes.filter(note => note._id !== noteId); // Remove the note from the current list
+
+        // setNotes(updatedNotes); // Update the notes state with the moved note
+        // setFilteredNotes(updatedNotes.filter(note => 
+        //   note.title && note.title.toLowerCase().includes(searchTerm.toLowerCase())
+        // )); // Update the filtered notes
+
+        setSelectedFolder(prev => {
+          const updated = { ...prev };
+          delete updated[noteId];
+          return updated;
+        }); // Clear the selected folder for the moved note
+        //alert("Note moved successfully!");
+      } else {
+        alert("Failed to move note. Please try again.");
+      }
+    } catch (error) {
+      console.error('Error moving note:', error);
+    }
+  };
 
   return (
     <div style={{ 
@@ -749,7 +785,64 @@ const Private = () => {
                     No folders available. Create a folder first.
                   </p>
                 ) : (
-                  folders.map((folder) => (
+                  <>
+                  {/* Remove from all folders option */}
+                  <button
+                    onClick={() => handleRemoveAll(noteToMove)}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      width: "100%",
+                      textAlign: "left",
+                      padding: "10px",
+                      borderRadius: "6px",
+                      marginBottom: "10px",
+                      border: "none",
+                      backgroundColor: "#fee2e2", // Light red background
+                      cursor: "pointer",
+                      transition: "background-color 0.2s",
+                      color: "#374151"
+                    }}
+                    onMouseOver={(e) => e.currentTarget.style.backgroundColor = "#fecaca"}
+                    onMouseOut={(e) => e.currentTarget.style.backgroundColor = "#fee2e2"}
+                  >
+                    <div style={{
+                      marginRight: "10px",
+                      fontSize: "18px",
+                      color: "#ef4444" // Red color
+                    }}>
+                      📤
+                    </div>
+                    <div>
+                      <div style={{ fontWeight: "500" }}>Remove from all folders</div>
+                      <div style={{
+                        fontSize: "12px",
+                        color: "#6B7280",
+                        marginTop: "2px"
+                      }}>Note will not be deleted, just removed from folders</div>
+                    </div>
+                  </button>
+
+                  <div style={{
+                  borderTop: "1px solid #e5e7eb",
+                  margin: "5px 0 15px 0",
+                  position: "relative"
+                }}>
+                  <span style={{
+                    position: "absolute",
+                    top: "-9px",
+                    backgroundColor: "white",
+                    padding: "0 10px",
+                    left: "50%",
+                    transform: "translateX(-50%)",
+                    color: "#6B7280",
+                    fontSize: "12px"
+                  }}>
+                    Or select a folder
+                  </span>
+                </div>
+
+                  {folders.map((folder) => (
                     <button
                       key={folder._id}
                       onClick={() => handleMoveNoteToFolder(folder._id)}
@@ -788,7 +881,8 @@ const Private = () => {
                         )}
                       </div>
                     </button>
-                  ))
+                  ))}
+                </>
                 )}
               </div>
               
