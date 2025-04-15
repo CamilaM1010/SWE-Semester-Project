@@ -94,7 +94,13 @@ const Private = () => {
     const noteToEdit = notes.find(note => note._id === noteId);
     navigate("/notes", { state: {note: noteToEdit} }); // Open note in Cornell template
   };
-
+  
+  // Helper function to strip HTML tags for preview
+  const stripHtml = (html) => {
+    if (!html) return '';
+    const doc = new DOMParser().parseFromString(html, 'text/html');
+    return doc.body.textContent || '';
+  };
   const handleCreateFolder = () => {
     setIsFolderModalOpen(true); // Open the folder creation modal
     setFolderNameModal(''); // Reset folder name input
@@ -498,9 +504,9 @@ const Private = () => {
                     }}>
                       {note.notes ? (
                         <p style={{ margin: "0" }}>
-                          {note.notes.length > 100 
-                            ? note.notes.substring(0, 100) + "..." 
-                            : note.notes}
+                          {stripHtml(note.notes).length > 100 
+                            ? stripHtml(note.notes).substring(0, 100) + "..." 
+                            : stripHtml(note.notes)}
                         </p>
                       ) : <p style={{ margin: "0", fontStyle: "italic", color: "#9CA3AF" }}>No content</p>}
                     </div>
@@ -516,11 +522,11 @@ const Private = () => {
                         color: "#6B7280",
                         fontSize: "12px"
                       }}>
-                          {note.edited && new Date(note.edited).toDateString() !== new Date(note.created).toDateString() ? 
-                        <span>Edited: {new Date(note.edited).toLocaleDateString()}</span> : null}
-    
-                          {note.edited && new Date(note.edited).toDateString() == new Date(note.created).toDateString() ? 
-                        <span>Edited: {new Date(note.created).toLocaleDateString()}</span> : null}
+                        {note.edited && new Date(note.edited).toDateString() !== new Date(note.created).toDateString() ? 
+                          <span>Edited: {new Date(note.edited).toLocaleDateString()}</span> : null}
+
+                        {note.edited && new Date(note.edited).toDateString() === new Date(note.created).toDateString() ? 
+                          <span>Created: {new Date(note.created).toLocaleDateString()}</span> : null}
                       </span>
                       <div style={{ display: "flex", gap: "8px" }}>
                         <button
@@ -581,5 +587,6 @@ const Private = () => {
     </div>    
   );
 };
+
 
 export default Private;

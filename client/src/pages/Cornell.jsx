@@ -1,15 +1,31 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 
 const CornellTemplate = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const note = location.state?.note || { title: "", questions: "", notes: "", summary: "" };
+  const note = location.state?.note || { title: "", header: "", notes: "", summary: "" };
 
   const [title, setTitle] = useState(note.title);
   const [header, setHeader] = useState(note.header);
   const [notes, setNotes] = useState(note.notes);
   const [summary, setSummary] = useState(note.summary);
+  
+  // Quill editor modules configuration
+  const modules = {
+    toolbar: [
+      ['bold', 'italic', 'underline'],
+      [{ 'background': [] }], // highlight
+      ['clean'] // remove formatting
+    ]
+  };
+  
+  const formats = [
+    'bold', 'italic', 'underline',
+    'background'
+  ];
 
   const handleSave = async () => {
     const noteData = { title, header, notes, summary };
@@ -142,28 +158,33 @@ const CornellTemplate = () => {
                 <span style={{ 
                   marginLeft: "8px", 
                   fontSize: "12px", 
-                  color: "#17a2b8"
+                  color: "#FFFFF"
                 }}>
                   Dino Tracks
                 </span>
               </h2>
             </div>
-            <textarea
-              value={header}
-              onChange={(e) => setHeader(e.target.value)}
-              placeholder="Record main concepts here..."
-              style={{
-                width: "100%",
-                height: "300px",
-                padding: "12px",
-                borderBottomLeftRadius: "8px",
-                borderBottomRightRadius: "8px",
-                border: "3px solid #0021A5",
-                borderTop: "none",
-                boxSizing: "border-box",
-                resize: "none"
-              }}
-            ></textarea>
+            <div style={{
+              border: "3px solid #0021A5",
+              borderTop: "none",
+              borderBottomLeftRadius: "8px",
+              borderBottomRightRadius: "8px",
+              boxSizing: "border-box",
+              height: "300px"
+            }}>
+              <ReactQuill
+                theme="snow"
+                value={header}
+                onChange={setHeader}
+                modules={modules}
+                formats={formats}
+                placeholder="Record main concepts here..."
+                style={{
+                  height: "250px",
+                  borderRadius: "0 0 8px 8px"
+                }}
+              />
+            </div>
           </div>
           
           <div style={{ flex: "2", maxWidth: "67%" }}>
@@ -186,22 +207,27 @@ const CornellTemplate = () => {
                 </span>
               </h2>
             </div>
-            <textarea
-              value={notes}
-              onChange={(e) => setNotes(e.target.value)}
-              placeholder="Document your detailed observations here..."
-              style={{
-                width: "100%",
-                height: "300px",
-                padding: "12px",
-                borderBottomLeftRadius: "8px",
-                borderBottomRightRadius: "8px",
-                border: "3px solid #FA4616",
-                borderTop: "none",
-                boxSizing: "border-box",
-                resize: "none"
-              }}
-            ></textarea>
+            <div style={{
+              border: "3px solid #0021A5",
+              borderTop: "none",
+              borderBottomLeftRadius: "8px",
+              borderBottomRightRadius: "8px",
+              boxSizing: "border-box",
+              height: "300px"
+            }}>
+              <ReactQuill
+                theme="snow"
+                value={notes}
+                onChange={setNotes}
+                modules={modules}
+                formats={formats}
+                placeholder="Document your detailed observations here..."
+                style={{
+                  height: "250px",
+                  borderRadius: "0 0 8px 8px"
+                }}
+              />
+            </div>
           </div>
         </div>
         
@@ -225,23 +251,28 @@ const CornellTemplate = () => {
               </span>
             </h2>
           </div>
-          <textarea
-            value={summary}
-            onChange={(e) => setSummary(e.target.value)}
-            placeholder="Summarize your key learnings here..."
-            style={{
-              width: "100%",
-              height: "120px",
-              padding: "12px",
-              borderBottomLeftRadius: "8px",
-              borderBottomRightRadius: "8px",
-              border: "linear-gradient(90deg, #0021A5 0%, #FA4616 100%)",
-              borderRight: "3px solid #FA4616",
-              borderTop: "none",
-              boxSizing: "border-box",
-              resize: "none"
-            }}
-          ></textarea>
+          <div style={{
+            borderLeft: "3px solid #0021A5",
+            border: "3px solid #0021A5",
+            border: "3px solid #0021A5",
+            borderBottomLeftRadius: "8px",
+            borderBottomRightRadius: "8px",
+            boxSizing: "border-box",
+            height: "150px"
+          }}>
+            <ReactQuill
+              theme="snow"
+              value={summary}
+              onChange={setSummary}
+              modules={modules}
+              formats={formats}
+              placeholder="Summarize your key learnings here..."
+              style={{
+                height: "100px",
+                borderRadius: "0 0 8px 8px"
+              }}
+            />
+          </div>
         </div>
         
         <div style={{ 
