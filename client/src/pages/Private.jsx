@@ -200,6 +200,18 @@ const Private = () => {
     }
   };
 
+  const handleFolderDelete = async (folderId) => {
+    if (!window.confirm("Are you sure you want to delete this folder?")) return;
+
+    try {
+      await api.deleteFolder(folderId); // Call API to delete folder
+      const updatedFolders = folders.filter(folder => folder._id !== folderId); // Update the folders state
+      setFolders(updatedFolders); // Update the folders state
+    } catch (error) {
+      console.error('Error deleting folder:', error);
+    }
+  }
+
   return (
     <div style={{ 
       backgroundColor: "#EBF5FF", 
@@ -397,6 +409,23 @@ const Private = () => {
                     }}>
                       {folder.description}
                     </p>
+                    <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleFolderDelete(folder._id);
+                          }}
+                          style={{
+                            backgroundColor: "#EF4444",
+                            color: "white",
+                            border: "none",
+                            borderRadius: "4px",
+                            padding: "6px 12px",
+                            fontSize: "12px",
+                            cursor: "pointer"
+                          }}
+                        >
+                          Delete
+                        </button>
                   </div>
                 ))}
               </div>
