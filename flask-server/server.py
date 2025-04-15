@@ -8,6 +8,7 @@ from dotenv import load_dotenv
 from models import User
 from database import get_database
 from notes import notes_bp
+from quiz import quiz_bp
 import secrets
 import datetime
 
@@ -23,6 +24,8 @@ login = LoginManager(app)
 login.login_view = 'api_login'
 
 app.register_blueprint(notes_bp, url_prefix='/api/notes')
+
+app.register_blueprint(quiz_bp, url_prefix='/api/quiz')
 
 @login.user_loader
 def load_user(username):
