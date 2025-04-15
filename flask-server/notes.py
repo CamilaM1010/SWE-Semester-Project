@@ -37,7 +37,7 @@ def create_note():
         "header": header,
         "notes": notes,
         "summary": summary,
-        "folder_id": data.get("folder_id", None),
+        "folder_id": data.get("folder_id", []),
         "created": datetime.datetime.utcnow(),
         "edited": datetime.datetime.utcnow()
     }

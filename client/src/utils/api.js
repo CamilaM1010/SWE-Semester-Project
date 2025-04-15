@@ -129,6 +129,24 @@ export const api = {
     if (!response.ok) throw new Error('Failed to delete folder');
   },
 
+  moveNoteToFolder: async (noteId, folderId) => {
+    const response = await fetch(`${API_BASE_URL}/api/folders/${folderId}/notes/${noteId}`, {
+      method: 'PUT',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+    });
+    if (!response.ok) throw new Error('Failed to move note in folder');
+  },
+
+  moveNoteOutFolder: async (noteId, folderId) => {
+    const response = await fetch(`${API_BASE_URL}/api/folders/${folderId}/notes/${noteId}`, {
+      method: 'DELETE',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+    });
+    if (!response.ok) throw new Error('Failed to move note out of folder');
+  },
+
 };
 
 export default api;
