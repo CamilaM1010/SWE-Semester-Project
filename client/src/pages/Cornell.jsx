@@ -44,7 +44,7 @@ const CornellTemplate = () => {
           body: JSON.stringify(noteData),
         });
       }
-      navigate("/private");
+      navigate(-1);
     } catch (error) {
       console.error("Error saving note:", error);
     }

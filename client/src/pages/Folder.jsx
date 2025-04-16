@@ -147,6 +147,9 @@ const Folder = () => {
         }
       };
 
+      const handleCreateNote = () => {
+        navigate("/notes"); // Go to Cornell template for new note
+      };
 
     //console.log("Location state:", location.state);
     // console.log("Folder data:", folder);
@@ -191,6 +194,26 @@ const Folder = () => {
                 </p>
                 </div>
             </div>
+
+            {/* <button 
+              onClick={handleCreateNote}
+              style={{
+                backgroundColor: "#FA4616",
+                color: "white",
+                border: "none",
+                borderRadius: "50px",
+                padding: "14px 30px",
+                fontSize: "16px",
+                fontWeight: "bold",
+                cursor: "pointer",
+                boxShadow: "0 4px 6px #2c3e50",
+                display: "flex",
+                alignItems: "center",
+                transition: "transform 0.2s, background-color 0.2s"
+                }}
+              >
+                <span style={{ marginRight: "8px" }}>🦕</span> Create New Note
+              </button> */}
 
             {/* Notes display section */}
             <div>

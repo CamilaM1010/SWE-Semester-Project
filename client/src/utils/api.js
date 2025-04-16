@@ -120,13 +120,14 @@ export const api = {
     return response.json();
   },
 
-  deleteFolder: async (id) => {
-    const response = await fetch(`${API_BASE_URL}/api/folders/${id}`, {
+  deleteFolder: async (folderId) => {
+    const response = await fetch(`${API_BASE_URL}/api/folders/${folderId}`, {
       method: 'DELETE',
       credentials: 'include',
       headers: { 'Content-Type': 'application/json' },
     });
     if (!response.ok) throw new Error('Failed to delete folder');
+    return response.json();
   },
 
   moveNoteToFolder: async (folderId, noteId) => {

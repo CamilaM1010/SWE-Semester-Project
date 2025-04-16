@@ -125,12 +125,19 @@ const Private = () => {
 
       const response = await api.createFolder(newFolder); // Call API to create folder
       console.log('Response from createFolder:', response);
+
       if (response.folder_id) {
-        setFolders([...folders, { 
+        const createdFolder = { 
           _id: response.folder_id, 
           name: folderNameModal, 
-          description: folderDescriptionModal 
-      }]);
+          description: folderDescriptionModal};
+
+      const updatedFolders = [...folders, createdFolder];
+      setFolders(updatedFolders);
+      if (!searchTerm || folderNameModal.toLowerCase().includes(searchTerm.toLowerCase())) {
+        setFilteredFolders([...filteredFolders, createdFolder]);
+      }
+
       setIsFolderModalOpen(false); // Close the modal
       setFolderNameModal('');
       setFolderDescriptionModal('');
@@ -200,8 +207,6 @@ const Private = () => {
     setMoveModalOpen(true);
   };
 
- 
-
   const handleFolderDelete = async (folderId) => {
     if (!window.confirm("Are you sure you want to delete this folder?")) return;
 
@@ -209,6 +214,8 @@ const Private = () => {
       await api.deleteFolder(folderId); // Call API to delete folder
       const updatedFolders = folders.filter(folder => folder._id !== folderId); // Update the folders state
       setFolders(updatedFolders); // Update the folders state
+      const updatedFilteredFolders = filteredFolders.filter(folder => folder._id !== folderId);
+      setFilteredFolders(updatedFilteredFolders);
     } catch (error) {
       console.error('Error deleting folder:', error);
     }
@@ -308,6 +315,7 @@ const Private = () => {
             <span style={{ marginRight: "8px" }}>🦕</span> Create New Folder
           </button>
 
+          {/* Folder creation modal */}
           {isFolderModalOpen && (
             <div style={{
               position: "fixed",
@@ -462,6 +470,7 @@ const Private = () => {
             </div>
           )}
 
+          {/* Create New Note button */}
           <button 
             onClick={handleCreateNote}
             style={{
@@ -503,7 +512,7 @@ const Private = () => {
             <span style={{ marginRight: "10px", fontSize: "18px" }}>🔍</span>
             <input
               type="text"
-              placeholder="Search notes by title..."
+              placeholder="Search notes/folders by title..."
               value={searchTerm}
               onChange={handleSearchChange}
               style={{
@@ -519,6 +528,7 @@ const Private = () => {
                 onClick={() => {
                   setSearchTerm('');
                   setFilteredNotes(notes);
+                  setFilteredFolders(folders);
                 }}
                 style={{
                   background: "none",
@@ -537,7 +547,7 @@ const Private = () => {
         <div style={{
           marginBottom: "30px"
         }}>
-          {folders && folders.length > 0 && (
+          {filteredFolders && filteredFolders.length > 0 && (
             <div style={{
               marginBottom: "20px"
             }}>
@@ -553,7 +563,7 @@ const Private = () => {
                 gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))",
                 gap: "20px"
               }}>
-                {folders.map((folder) => (
+                {filteredFolders.map(folder => (
                   <div 
                     key={folder._id}
                     style={{
@@ -630,7 +640,7 @@ const Private = () => {
                 `}
               </style>
             </div>
-          ) : filteredNotes.length === 0 ? (
+          ) : filteredNotes.length === 0 && filteredFolders.length === 0 ? (
             <div style={{
               textAlign: "center",
               padding: "60px 20px",
@@ -647,7 +657,7 @@ const Private = () => {
                 marginBottom: "20px"
               }}>
                 {searchTerm 
-                  ? `No notes found matching "${searchTerm}"`
+                  ? `No notes or found matching "${searchTerm}"`
                   : "No fossil records found yet."}
               </p>
               {!searchTerm && (
@@ -673,6 +683,7 @@ const Private = () => {
                   onClick={() => {
                     setSearchTerm('');
                     setFilteredNotes(notes);
+                    setFilteredFolders(folders);
                   }}
                   style={{
                     backgroundColor: "#0021A5",
@@ -847,17 +858,23 @@ const Private = () => {
         </div>
         
         {/* Search results count - show when search is active */}
-        {searchTerm && filteredNotes.length > 0 && (
+        {searchTerm && (filteredNotes.length > 0 || filteredFolders.length > 0) && (
           <div style={{ 
             marginTop: "20px", 
             textAlign: "center",
             color: "#1E40AF",
             fontWeight: "bold"
           }}>
-            Found {filteredNotes.length} note{filteredNotes.length !== 1 ? 's' : ''} matching "{searchTerm}"
+            {filteredFolders.length > 0 && (
+              <div>Found {filteredFolders.length} folder{filteredFolders.length !== 1 ? 's' : ''} matching "{searchTerm}"</div>
+            )}
+            {filteredNotes.length > 0 && (
+              <div>Found {filteredNotes.length} note{filteredNotes.length !== 1 ? 's' : ''} matching "{searchTerm}"</div>
+            )}
           </div>
         )}
 
+        {/* Move Note Modal */}
         {moveModalOpen && (
           <div style={{
             position: "fixed",
@@ -931,7 +948,7 @@ const Private = () => {
                       borderRadius: "6px",
                       marginBottom: "10px",
                       border: "none",
-                      backgroundColor: "#fee2e2", // Light red background
+                      backgroundColor: "#fee2e2",
                       cursor: "pointer",
                       transition: "background-color 0.2s",
                       color: "#374151"
@@ -942,7 +959,7 @@ const Private = () => {
                     <div style={{
                       marginRight: "10px",
                       fontSize: "18px",
-                      color: "#ef4444" // Red color
+                      color: "#ef4444" 
                     }}>
                       📤
                     </div>

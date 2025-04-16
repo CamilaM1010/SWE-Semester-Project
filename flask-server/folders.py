@@ -131,4 +131,4 @@ def delete_folder(folder_id):
     notes_collection.update_many({"folder_id": folder_id, "user": current_user.get_id()}, {"$pull": {"folder_id": folder_id}})
     folder_collection.delete_one({"_id": ObjectId(folder_id)})
 
-    return jsonify({"message": "Folder deleted"}), 200
+    return jsonify(success=True, message="folder successfully deleted"), 200
