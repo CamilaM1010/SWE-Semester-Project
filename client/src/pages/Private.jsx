@@ -15,7 +15,6 @@ const Private = () => {
   const [folderNameModal, setFolderNameModal] = useState(''); // State to hold the folder name for modal input
   const [folderDescriptionModal, setFolderDescriptionModal] = useState(''); // State to hold the folder description for modal input
   const [selectedFolder, setSelectedFolder] = useState({}); // State to hold the selected folder for editing
-  const [showPopupMove, setShowPopupMove] = useState(false); // State to control the visibility of the move note popup
   const [moveModalOpen, setMoveModalOpen] = useState(false);
   const [noteToMove, setNoteToMove] = useState(null);
   const navigate = useNavigate();

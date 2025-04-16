@@ -147,13 +147,20 @@ const Folder = () => {
         }
       };
 
-      const handleCreateNote = () => {
-        navigate("/notes"); // Go to Cornell template for new note
+      const handleSearchChange = (e) => {
+        const term = e.target.value;
+        setSearchTerm(term);
+        
+        // Filter notes based on search term
+        if (term.trim() === '') {
+          setFilteredNotes(notes); // If search is empty, show all notes
+        } else {
+          const filtered = notes.filter(note => 
+            note.title && note.title.toLowerCase().includes(term.toLowerCase())
+          );
+          setFilteredNotes(filtered);
+        }
       };
-
-    //console.log("Location state:", location.state);
-    // console.log("Folder data:", folder);
-    // console.log("Folder ID:", folder._id);
 
     return(
     <div style={{ 
@@ -195,25 +202,55 @@ const Folder = () => {
                 </div>
             </div>
 
-            {/* <button 
-              onClick={handleCreateNote}
-              style={{
-                backgroundColor: "#FA4616",
-                color: "white",
-                border: "none",
-                borderRadius: "50px",
-                padding: "14px 30px",
-                fontSize: "16px",
-                fontWeight: "bold",
-                cursor: "pointer",
-                boxShadow: "0 4px 6px #2c3e50",
+            {/* Search bar section */}
+            <div style={{
+              marginBottom: "20px",
+              background: "white",
+              padding: "15px",
+              borderRadius: "10px",
+              boxShadow: "0 2px 4px #2c3e50"
+            }}>
+              <div style={{
                 display: "flex",
                 alignItems: "center",
-                transition: "transform 0.2s, background-color 0.2s"
-                }}
-              >
-                <span style={{ marginRight: "8px" }}>🦕</span> Create New Note
-              </button> */}
+                width: "97%",
+                border: "2px solid #0021A5",
+                borderRadius: "50px",
+                padding: "5px 15px",
+                backgroundColor: "white"
+              }}>
+                <span style={{ marginRight: "10px", fontSize: "18px" }}>🔍</span>
+                <input
+                  type="text"
+                  placeholder="Search notes by title..."
+                  value={searchTerm}
+                  onChange={handleSearchChange}
+                  style={{
+                    border: "none",
+                    outline: "none",
+                    width: "100%",
+                    padding: "8px",
+                    fontSize: "16px"
+                  }}
+                />
+                {searchTerm && (
+                  <button
+                    onClick={() => {
+                      setSearchTerm('');
+                      setFilteredNotes(notes);
+                    }}
+                    style={{
+                      background: "none",
+                      border: "none",
+                      cursor: "pointer",
+                      fontSize: "18px"
+                    }}
+                  >
+                    ✕
+                  </button>
+                )}
+              </div>
+            </div>
 
             {/* Notes display section */}
             <div>
@@ -243,7 +280,7 @@ const Folder = () => {
                   `}
                 </style>
               </div>
-            ) : /*filteredNotes.length === 0 ? (
+            ) : filteredNotes.length === 0 ? (
               <div style={{
                 textAlign: "center",
                 padding: "60px 20px",
@@ -263,24 +300,6 @@ const Folder = () => {
                     ? `No notes found matching "${searchTerm}"`
                     : "No fossil records found yet."}
                 </p>
-                {!searchTerm && (
-                  <button 
-                    onClick={handleCreateNote}
-                    style={{
-                      backgroundColor: "#F97316",
-                      color: "white",
-                      border: "none",
-                      borderRadius: "8px",
-                      padding: "12px 24px",
-                      fontSize: "16px",
-                      fontWeight: "bold",
-                      cursor: "pointer",
-                      boxShadow: "0 2px 4px #2c3e50"
-                    }}
-                  >
-                    Start Your First Note
-                  </button>
-                )}
                 {searchTerm && (
                   <button 
                     onClick={() => {
@@ -303,7 +322,7 @@ const Folder = () => {
                   </button>
                 )}
               </div>
-            ) : */(
+            ) : (
               <h3 style={{
                 fontSize: "20px",
                 color: "#0021A5",
@@ -458,6 +477,21 @@ const Folder = () => {
                 ))}
               </div>
           </div>
+
+          {/*Search results count */}
+          {searchTerm && filteredNotes.length > 0 && (
+            <div style={{ 
+              marginTop: "20px", 
+              textAlign: "center",
+              color: "#1E40AF",
+              fontWeight: "bold"
+            }}>
+              {filteredNotes.length > 0 && (
+                <div>Found {filteredNotes.length} note{filteredNotes.length !== 1 ? 's' : ''} matching "{searchTerm}"</div>
+              )}
+            </div>
+          )}
+
           {moveModalOpen && (
             <div style={{
               position: "fixed",
