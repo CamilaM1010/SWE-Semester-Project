@@ -309,22 +309,155 @@ const Private = () => {
           </button>
 
           {isFolderModalOpen && (
-            <div className="modal-background">
-              <div className="modal-content">
-                <h2>Create New Folder</h2>
-                <input
-                type="text"
-                placeholder="Folder Name"
-                value={folderNameModal}
-                onChange={(e) => setFolderNameModal(e.target.value)}
-                />
-                <textarea
-                placeholder="Folder Description"
-                value={folderDescriptionModal}
-                onChange={(e) => setFolderDescriptionModal(e.target.value)}
-                 ></textarea>
-                <button onClick={handleSaveFolder}>Save</button>
-               <button onClick={handleCancelFolder}>Cancel</button>
+            <div style={{
+              position: "fixed",
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              backgroundColor: "rgba(0, 0, 0, 0.5)",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              zIndex: 1000
+            }}>
+              <div style={{
+                backgroundColor: "white",
+                borderRadius: "12px",
+                padding: "20px",
+                width: "90%",
+                maxWidth: "400px",
+                boxShadow: "0 5px 15px rgba(0, 0, 0, 0.3)",
+                animation: "fadeIn 0.3s"
+              }}>
+                <div style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  marginBottom: "15px",
+                  borderBottom: "1px solid #e5e7eb",
+                  paddingBottom: "15px"
+                }}>
+                  <h3 style={{
+                    margin: 0,
+                    color: "#0021A5",
+                    fontSize: "18px",
+                    fontWeight: "bold"
+                  }}>Create New Folder 🦕</h3>
+                  <button
+                    onClick={handleCancelFolder}
+                    style={{
+                      backgroundColor: "transparent",
+                      border: "none",
+                      fontSize: "20px",
+                      cursor: "pointer",
+                      color: "#6B7280"
+                    }}
+                  >
+                    ✕
+                  </button>
+                </div>
+                
+                <div style={{ marginBottom: "15px" }}>
+                  <label 
+                    htmlFor="folderName" 
+                    style={{
+                      display: "block",
+                      marginBottom: "5px",
+                      color: "#374151",
+                      fontSize: "14px",
+                      fontWeight: "500"
+                    }}
+                  >
+                    Folder Name
+                  </label>
+                  <input
+                    id="folderName"
+                    type="text"
+                    placeholder="Enter folder name"
+                    value={folderNameModal}
+                    onChange={(e) => setFolderNameModal(e.target.value)}
+                    style={{
+                      width: "100%",
+                      padding: "10px",
+                      borderRadius: "6px",
+                      border: "1px solid #d1d5db",
+                      fontSize: "14px",
+                      outline: "none",
+                      transition: "border-color 0.2s",
+                      marginBottom: "15px"
+                    }}
+                  />
+                  
+                  <label 
+                    htmlFor="folderDescription" 
+                    style={{
+                      display: "block",
+                      marginBottom: "5px",
+                      color: "#374151",
+                      fontSize: "14px",
+                      fontWeight: "500"
+                    }}
+                  >
+                    Folder Description (Optional)
+                  </label>
+                  <textarea
+                    id="folderDescription"
+                    placeholder="Enter folder description"
+                    value={folderDescriptionModal}
+                    onChange={(e) => setFolderDescriptionModal(e.target.value)}
+                    style={{
+                      width: "100%",
+                      padding: "10px",
+                      borderRadius: "6px",
+                      border: "1px solid #d1d5db",
+                      fontSize: "14px",
+                      outline: "none",
+                      transition: "border-color 0.2s",
+                      minHeight: "100px",
+                      resize: "vertical"
+                    }}
+                  ></textarea>
+                </div>
+                
+                <div style={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  gap: "10px",
+                  borderTop: "1px solid #e5e7eb",
+                  paddingTop: "15px"
+                }}>
+                  <button
+                    onClick={handleCancelFolder}
+                    style={{
+                      backgroundColor: "#f3f4f6",
+                      color: "#374151",
+                      border: "none",
+                      borderRadius: "6px",
+                      padding: "8px 16px",
+                      fontSize: "14px",
+                      cursor: "pointer"
+                    }}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleSaveFolder}
+                    style={{
+                      backgroundColor: "#0021A5",
+                      color: "white",
+                      border: "none",
+                      borderRadius: "6px",
+                      padding: "8px 16px",
+                      fontSize: "14px",
+                      cursor: "pointer",
+                      display: "flex",
+                      alignItems: "center"
+                    }}
+                  >
+                    <span style={{ marginRight: "5px" }}>🦖</span> Save Folder
+                  </button>
+                </div>
               </div>
             </div>
           )}

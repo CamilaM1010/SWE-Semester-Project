@@ -130,7 +130,7 @@ export const api = {
   },
 
   moveNoteToFolder: async (folderId, noteId) => {
-    const response = await fetch(`${API_BASE_URL}/api/folders/${folderId}/notes/${noteId}`, {
+    const response = await fetch(`${API_BASE_URL}/api/folders/${folderId}/notes/${noteId}/move`, {
       method: 'PUT',
       credentials: 'include',
       headers: { 'Content-Type': 'application/json' },
@@ -148,7 +148,18 @@ export const api = {
 
       if (!response.ok) throw new Error('Failed to move note in folder');
       return response.json();
-  }
+  },
+
+  moveNoteOutOneFolder: async (folderId, noteId) => {
+    const response = await fetch(`${API_BASE_URL}/api/folders/${folderId}/notes/${noteId}/remove`, {
+      method: 'PUT',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+    });
+    if (!response.ok) throw new Error('Failed to move note out of folder');
+    return response.json();
+  },
+
 };
 
 export default api;

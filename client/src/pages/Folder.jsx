@@ -9,18 +9,23 @@ const Folder = () => {
     const [notes, setNotes] = useState([]);
     const [filteredNotes, setFilteredNotes] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [moveModalOpen, setMoveModalOpen] = useState(false);
+    const [noteToMove, setNoteToMove] = useState(null);
+    const [folders, setFolders] = useState([]);
+    const [selectedFolder, setSelectedFolder] = useState({}); // State to hold the selected folder for editing
+    const [searchTerm, setSearchTerm] = useState('');
 
       useEffect(() => {
         // Fetch user notes when component mounts
         const fetchNotes = async () => {
           try {
             const response = await api.getNotes(); // Fetch notes from the API
+            const responseFolders = await api.getFolders(); // Fetch folders from the API
             console.log("Fetched notes:", response);
-
-            const notesInFolder = response.filter(note => note.folder_id.includes(folder._id));
-
-            setNotes(notesInFolder); 
-            setFilteredNotes(notesInFolder); 
+            console.log("Fetched folders:", responseFolders);
+            setNotes(response || []); // Set notes state with the fetched data
+            setFolders(responseFolders || []); // Set folders state with the fetched data
+            setFilteredNotes(response.filter(note => note.folder_id.includes(folder._id)) || []); // Filter notes based on the folder ID
           } catch (error) {
             console.error('Error fetching notes:', error);
           } finally {
@@ -43,11 +48,11 @@ const Folder = () => {
           }
       
           await api.deleteNote(noteId);
-          const updatedNotes = notes.filter(note => note._id !== noteId);
+          const updatedNotes = filteredNotes.filter(note => note._id !== noteId);
           setNotes(updatedNotes); // Update the full notes array
-          // setFilteredNotes(updatedNotes.filter(note => 
-          //   note.title && note.title.toLowerCase().includes(searchTerm.toLowerCase())
-          // )); // Update the filtered notes
+          setFilteredNotes(updatedNotes.filter(note => 
+            note.title && note.title.toLowerCase().includes(searchTerm.toLowerCase())
+          )); // Update the filtered notes
         } catch (error) {
           console.error('Error deleting note:', error);
         }
@@ -62,6 +67,84 @@ const Folder = () => {
         if (!html) return '';
         const doc = new DOMParser().parseFromString(html, 'text/html');
         return doc.body.textContent || '';
+      };
+
+      const openMoveModal = (noteId) => {
+        setNoteToMove(noteId);
+        setMoveModalOpen(true);
+      };
+
+      const handleMoveNoteToFolder = (folderId) => {
+          if (noteToMove) {
+            handleMoveNote(folderId, noteToMove);
+            setMoveModalOpen(false);
+            setNoteToMove(null);
+          }
+        };
+      
+        const handleMoveNote = async (folderId, noteId) => {
+          if (!folderId) {
+            alert("Please select a folder to move the note to.");
+            return;
+          }
+      
+          try {
+            const response = await api.moveNoteToFolder(folderId, noteId); // Call API to move note
+            console.log('Response from moveNoteToFolder:', response);
+            if (response.success) {
+              const updatedNotes = filteredNotes.filter(note => note._id !== noteId); // Remove the note from the current list
+      
+              setNotes(updatedNotes); // Update the notes state with the moved note
+              setFilteredNotes(updatedNotes.filter(note => 
+                note.title && note.title.toLowerCase().includes(searchTerm.toLowerCase())
+              )); // Update the filtered notes
+      
+              setSelectedFolder(prev => {
+                const updated = { ...prev };
+                delete updated[noteId];
+                return updated;
+              }); // Clear the selected folder for the moved note
+              //alert("Note moved successfully!");
+            } else {
+              alert("Failed to move note. Please try again.");
+            }
+          } catch (error) {
+            console.error('Error moving note:', error);
+          }
+        };
+
+      const handleRemoveNote = (folderId, noteToMove) => {
+        if (noteToMove) {
+          handleRemoveNoteFromFolder(folderId, noteToMove);
+          setMoveModalOpen(false);
+          setNoteToMove(null);
+        }
+      };
+
+      const handleRemoveNoteFromFolder = async (folderId, noteId) => {
+        try {
+          const response = await api.moveNoteOutOneFolder(folderId, noteId); 
+          console.log('Response from moveNoteOutOneFolder:', response);
+          if (response.success) {
+            const updatedNotes = filteredNotes.filter(note => note._id !== noteId); // Remove the note from the current list
+    
+            setNotes(updatedNotes); // Update the notes state with the moved note
+            setFilteredNotes(updatedNotes.filter(note => 
+              note.title && note.title.toLowerCase().includes(searchTerm.toLowerCase())
+            )); // Update the filtered notes
+    
+            setSelectedFolder(prev => {
+              const updated = { ...prev };
+              delete updated[noteId];
+              return updated;
+            }); // Clear the selected folder for the moved note
+            //alert("Note moved successfully!");
+          } else {
+            alert("Failed to move note. Please try again.");
+          }
+        } catch (error) {
+          console.error('Error moving note:', error);
+        }
       };
 
 
@@ -326,6 +409,25 @@ const Folder = () => {
                           >
                             Delete
                           </button>
+                          <div className="relative inline-block">
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              openMoveModal(note._id);
+                            }}
+                            style={{
+                              backgroundColor: "#17a2b8",
+                              color: "white",
+                              border: "none",
+                              borderRadius: "4px",
+                              padding: "6px 12px",
+                              fontSize: "12px",
+                              cursor: "pointer"
+                            }}
+                            >
+                            Move
+                          </button>
+                        </div>
                         </div>
                       </div>
                     </div>
@@ -333,7 +435,201 @@ const Folder = () => {
                 ))}
               </div>
           </div>
+          {moveModalOpen && (
+            <div style={{
+              position: "fixed",
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              backgroundColor: "rgba(0, 0, 0, 0.5)",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              zIndex: 1000
+            }}>
+              <div style={{
+                backgroundColor: "white",
+                borderRadius: "12px",
+                padding: "20px",
+                width: "90%",
+                maxWidth: "400px",
+                boxShadow: "0 5px 15px rgba(0, 0, 0, 0.3)",
+                animation: "fadeIn 0.3s"
+              }}>
+                <div style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  marginBottom: "15px",
+                  borderBottom: "1px solid #e5e7eb",
+                  paddingBottom: "15px"
+                }}>
+                  <h3 style={{
+                    margin: 0,
+                    color: "#0021A5",
+                    fontSize: "18px",
+                    fontWeight: "bold"
+                  }}>Move Note to Folder</h3>
+                  <button
+                    onClick={() => setMoveModalOpen(false)}
+                    style={{
+                      backgroundColor: "transparent",
+                      border: "none",
+                      fontSize: "20px",
+                      cursor: "pointer",
+                      color: "#6B7280"
+                    }}
+                  >
+                    ✕
+                  </button>
+                </div>
+                
+                <div style={{
+                  maxHeight: "300px",
+                  overflowY: "auto",
+                  marginBottom: "15px"
+                }}>
+                  {folders.length === 0 ? (
+                    <p style={{ textAlign: "center", color: "#6B7280" }}>
+                      No folders available. Create a folder first.
+                    </p>
+                  ) : (
+                    <>
+                    {/* Remove from all folders option */}
+                    <button
+                      onClick={() => handleRemoveNote(folder._id, noteToMove)}
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        width: "100%",
+                        textAlign: "left",
+                        padding: "10px",
+                        borderRadius: "6px",
+                        marginBottom: "10px",
+                        border: "none",
+                        backgroundColor: "#fee2e2", // Light red background
+                        cursor: "pointer",
+                        transition: "background-color 0.2s",
+                        color: "#374151"
+                      }}
+                      onMouseOver={(e) => e.currentTarget.style.backgroundColor = "#fecaca"}
+                      onMouseOut={(e) => e.currentTarget.style.backgroundColor = "#fee2e2"}
+                    >
+                      <div style={{
+                        marginRight: "10px",
+                        fontSize: "18px",
+                        color: "#ef4444" // Red color
+                      }}>
+                        📤
+                      </div>
+                      <div>
+                        <div style={{ fontWeight: "500" }}>Remove note from current folder</div>
+                        <div style={{
+                          fontSize: "12px",
+                          color: "#6B7280",
+                          marginTop: "2px"
+                        }}>Note will not be deleted, just removed from this folder</div>
+                      </div>
+                    </button>
 
+                    <div style={{
+                    borderTop: "1px solid #e5e7eb",
+                    margin: "5px 0 15px 0",
+                    position: "relative"
+                  }}>
+                    <span style={{
+                      position: "absolute",
+                      top: "-9px",
+                      backgroundColor: "white",
+                      padding: "0 10px",
+                      left: "50%",
+                      transform: "translateX(-50%)",
+                      color: "#6B7280",
+                      fontSize: "12px"
+                    }}>
+                      Or select a folder
+                    </span>
+                  </div>
+
+                    {folders.map((folder) => (
+                      <button
+                        key={folder._id}
+                        onClick={() => handleMoveNoteToFolder(folder._id)}
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          width: "100%",
+                          textAlign: "left",
+                          padding: "10px",
+                          borderRadius: "6px",
+                          marginBottom: "5px",
+                          border: "none",
+                          backgroundColor: "transparent",
+                          cursor: "pointer",
+                          transition: "background-color 0.2s",
+                          color: "#374151"
+                        }}
+                        onMouseOver={(e) => e.currentTarget.style.backgroundColor = "#f3f4f6"}
+                        onMouseOut={(e) => e.currentTarget.style.backgroundColor = "transparent"}
+                      >
+                        <div style={{
+                          marginRight: "10px",
+                          fontSize: "18px",
+                          color: "#17a2b8"
+                        }}>
+                          📁
+                        </div>
+                        <div>
+                          <div style={{ fontWeight: "500" }}>{folder.name}</div>
+                          {folder.description && (
+                            <div style={{
+                              fontSize: "12px",
+                              color: "#6B7280",
+                              marginTop: "2px"
+                            }}>{folder.description}</div>
+                          )}
+                        </div>
+                      </button>
+                    ))}
+                  </>
+                  )}
+                </div>
+                
+                <div style={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  gap: "10px",
+                  borderTop: "1px solid #e5e7eb",
+                  paddingTop: "15px"
+                }}>
+                  <button
+                    onClick={() => setMoveModalOpen(false)}
+                    style={{
+                      backgroundColor: "#f3f4f6",
+                      color: "#374151",
+                      border: "none",
+                      borderRadius: "6px",
+                      padding: "8px 16px",
+                      fontSize: "14px",
+                      cursor: "pointer"
+                    }}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          <style>
+            {`
+              @keyframes fadeIn {
+                from { opacity: 0; transform: translateY(-20px); }
+                to { opacity: 1; transform: translateY(0); }
+              }
+            `}
+          </style>
         </div>
     </div>
 
