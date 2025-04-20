@@ -10,19 +10,20 @@ import Register from './pages/Register';
 import Private from './pages/Private';
 import ResetPassword from './pages/ResetPassword';
 import Cornell from './pages/Cornell';
+import QuizGenerator from './pages/QuizGenerator';
 
 // Protected route component
 const ProtectedRoute = ({ children }) => {
   const { user, loading } = useAuth();
-  
+
   if (loading) {
     return <div className="loading">Loading...</div>;
   }
-  
+
   if (!user) {
     return <Navigate to="/login" />;
   }
-  
+
   return children;
 };
 
@@ -38,22 +39,23 @@ function App() {
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
               <Route path="/reset-password" element={<ResetPassword />} />
-              <Route 
-                path="/private" 
+              <Route
+                path="/private"
                 element={
                   <ProtectedRoute>
                     <Private />
                   </ProtectedRoute>
-                } 
+                }
               />
               <Route
                 path="/notes/:noteId?"
                 element={
                   <ProtectedRoute>
-                    <Cornell/>
+                    <Cornell />
                   </ProtectedRoute>
                 }
               />
+              <Route path="/quiz-test" element={<ProtectedRoute><QuizGenerator /></ProtectedRoute>} />
             </Routes>
           </div>
         </div>

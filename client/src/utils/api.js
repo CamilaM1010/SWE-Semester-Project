@@ -53,7 +53,7 @@ export const api = {
   getNote: (id) => request(`/api/notes/${id}`),
 
   createNote: async (noteData) => {
-    const response = await fetch("/api/notes/", {
+    const response = await fetch(`${API_BASE_URL}/api/notes/`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
@@ -82,6 +82,26 @@ export const api = {
       headers: { 'Content-Type': 'application/json' },
     });
     if (!response.ok) throw new Error('Failed to delete note');
+  },
+
+  generateQuiz: async (noteIds, quizType) => {
+    const response = await fetch(`${API_BASE_URL}/api/quiz/generate`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include', // to include session cookie
+      body: JSON.stringify({
+        note_ids: noteIds,
+        quiz_type: quizType
+      })
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || 'Failed to generate quiz');
+    }
+
+    return data;
   },
   
   // User profile
