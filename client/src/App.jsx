@@ -10,6 +10,8 @@ import Register from './pages/Register';
 import Private from './pages/Private';
 import ResetPassword from './pages/ResetPassword';
 import Cornell from './pages/Cornell';
+import QuizGenerator from './pages/QuizGenerator';
+import Folder from './pages/Folder'; 
 
 // Protected route component
 const ProtectedRoute = ({ children }) => {
@@ -54,6 +56,17 @@ function App() {
                   </ProtectedRoute>
                 }
               />
+
+<Route path="/quiz-test" element={<ProtectedRoute><QuizGenerator /></ProtectedRoute>}/>
+
+              <Route
+                path="/folder/:folderId?"
+                element={
+                  <ProtectedRoute>
+                    <Folder/>
+                  </ProtectedRoute>
+                }
+                />
             </Routes>
           </div>
         </div>
