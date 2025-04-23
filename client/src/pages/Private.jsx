@@ -20,6 +20,13 @@ const Private = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    if (!user) {
+      navigate("/login");
+    }
+  }, [user, navigate]);
+  
+
+  useEffect(() => {
     // Fetch user notes when component mounts
     const fetchNotes = async () => {
       try {
@@ -37,7 +44,6 @@ const Private = () => {
         setLoading(false);
       }
     };
-    
 
     fetchNotes();
   }, []);
@@ -253,6 +259,12 @@ const Private = () => {
       console.error('Error moving note:', error);
     }
   };
+
+  const handleGenerateQuiz = () => {
+    // Navigate to the quiz page and optionally pass selected notes
+    navigate("/quiz");
+  };
+  
 
   return (
     <div style={{ 
@@ -489,7 +501,29 @@ const Private = () => {
           >
             <span style={{ marginRight: "8px" }}>🦕</span> Create New Note
           </button>
-        </div>
+
+       {/* Generate Quiz Button*/}
+        <button 
+          onClick={handleGenerateQuiz}
+          style={{
+            backgroundColor: "#17a2b8",
+            color: "white",
+            border: "none",
+            borderRadius: "50px",
+            padding: "14px 30px",
+            fontSize: "16px",
+            fontWeight: "bold",
+            cursor: "pointer",
+            boxShadow: "0 4px 6px #2c3e50",
+            display: "flex",
+            alignItems: "center",
+            transition: "transform 0.2s, background-color 0.2s"
+          }}
+        >
+        <span style={{ marginRight: "8px" }}>🧠</span> Generate Quiz
+      </button>
+      </div>
+
     
         {/* Search Bar */}
         <div style={{

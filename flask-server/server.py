@@ -11,6 +11,7 @@ from notes import notes_bp
 import secrets
 import datetime
 from folders import folder_bp
+from quiz import quiz_bp
 
 load_dotenv()
 app = Flask(__name__, static_folder='../client/build')
@@ -26,6 +27,7 @@ login.login_view = 'api_login'
 
 app.register_blueprint(notes_bp, url_prefix='/api/notes')
 app.register_blueprint(folder_bp, url_prefix='/api/folders')
+app.register_blueprint(quiz_bp, url_prefix='/api/quiz')
 
 @login.user_loader
 def load_user(username):
@@ -92,6 +94,17 @@ def api_register():
             'success': False,
             'error': f'Registration error: {str(e)}'
         }), 500
+    
+@app.route("/api/notes", methods=["GET"])
+@login_required
+def get_notes():
+    notes = notes_collection.find({ "user": current_user.get_id() })
+    result = []
+    for note in notes:
+        note["_id"] = str(note["_id"])
+        result.append(note)
+    return jsonify(result)
+
 
 @app.route('/api/reset-password', methods=['POST'])
 def api_reset_password():
