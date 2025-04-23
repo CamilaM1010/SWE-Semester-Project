@@ -33,12 +33,12 @@ const Private = () => {
   const handleSearchChange = (e) => {
     const term = e.target.value;
     setSearchTerm(term);
-    
+
     // Filter notes based on search term
     if (term.trim() === '') {
       setFilteredNotes(notes); // If search is empty, show all notes
     } else {
-      const filtered = notes.filter(note => 
+      const filtered = notes.filter(note =>
         note.title && note.title.toLowerCase().includes(term.toLowerCase())
       );
       setFilteredNotes(filtered);
@@ -54,11 +54,11 @@ const Private = () => {
         console.error("No noteId provided. Unable to delete.");
         return;
       }
-  
+
       await api.deleteNote(noteId);
       const updatedNotes = notes.filter(note => note._id !== noteId);
       setNotes(updatedNotes); // Update the full notes array
-      setFilteredNotes(updatedNotes.filter(note => 
+      setFilteredNotes(updatedNotes.filter(note =>
         note.title && note.title.toLowerCase().includes(searchTerm.toLowerCase())
       )); // Update the filtered notes
     } catch (error) {
@@ -72,29 +72,27 @@ const Private = () => {
 
   const handleEditNote = (noteId) => {
     const noteToEdit = notes.find(note => note._id === noteId);
-    navigate("/notes", { state: {note: noteToEdit} }); // Open note in Cornell template
+    navigate("/notes", { state: { note: noteToEdit } }); // Open note in Cornell template
   };
-  
-  // Helper function to strip HTML tags for preview
-  const stripHtml = (html) => {
-    if (!html) return '';
-    const doc = new DOMParser().parseFromString(html, 'text/html');
-    return doc.body.textContent || '';
+
+  const handleStartQuiz = (noteId) => {
+    const selectedNote = notes.find(note => note._id === noteId);
+    navigate("/quiz-test", { state: { selectedNote } });
   };
 
   return (
-    <div style={{ 
-      backgroundColor: "#EBF5FF", 
+    <div style={{
+      backgroundColor: "#EBF5FF",
       minHeight: "100vh",
       padding: "20px"
     }}>
-      <div style={{ 
-        maxWidth: "1200px", 
+      <div style={{
+        maxWidth: "1200px",
         margin: "0 auto"
       }}>
-        <div style={{ 
-          display: "flex", 
-          justifyContent: "space-between", 
+        <div style={{
+          display: "flex",
+          justifyContent: "space-between",
           alignItems: "center",
           background: "linear-gradient(90deg, #0021A5 0%, #17a2b8 100%)",
           padding: "20px 30px",
@@ -103,17 +101,17 @@ const Private = () => {
           boxShadow: "0 4px 6px #2c3e50"
         }}>
           <div>
-            <h1 style={{ 
-              fontSize: "28px", 
-              color: "white", 
+            <h1 style={{
+              fontSize: "28px",
+              color: "white",
               margin: "0 0 5px 0",
               display: "flex",
               alignItems: "center"
             }}>
               Welcome, {user?.username}! <span style={{ marginLeft: "10px" }}>🦖</span>
             </h1>
-            <p style={{ 
-              color: "#17a2b8", 
+            <p style={{
+              color: "#17a2b8",
               margin: "0",
               fontSize: "16px"
             }}>
@@ -121,7 +119,7 @@ const Private = () => {
             </p>
           </div>
 
-          <button 
+          <button
             onClick={handleCreateNote}
             style={{
               backgroundColor: "#FA4616",
@@ -191,7 +189,7 @@ const Private = () => {
             )}
           </div>
         </div>
-        
+
         <div>
           {loading ? (
             <div style={{
@@ -230,17 +228,17 @@ const Private = () => {
               <div style={{ fontSize: "60px", marginBottom: "20px" }}>
                 {searchTerm ? '🔍' : '🦕'}
               </div>
-              <p style={{ 
-                fontSize: "18px", 
+              <p style={{
+                fontSize: "18px",
                 color: "#1E40AF",
                 marginBottom: "20px"
               }}>
-                {searchTerm 
+                {searchTerm
                   ? `No notes found matching "${searchTerm}"`
                   : "No fossil records found yet."}
               </p>
               {!searchTerm && (
-                <button 
+                <button
                   onClick={handleCreateNote}
                   style={{
                     backgroundColor: "#F97316",
@@ -258,7 +256,7 @@ const Private = () => {
                 </button>
               )}
               {searchTerm && (
-                <button 
+                <button
                   onClick={() => {
                     setSearchTerm('');
                     setFilteredNotes(notes);
@@ -287,8 +285,8 @@ const Private = () => {
               marginTop: "20px"
             }}>
               {filteredNotes.map(note => (
-                <div 
-                  key={note._id} 
+                <div
+                  key={note._id}
                   style={{
                     backgroundColor: "white",
                     borderRadius: "10px",
@@ -296,7 +294,9 @@ const Private = () => {
                     overflow: "hidden",
                     border: "3px solid #0021A5",
                     transition: "transform 0.2s",
-                    cursor: "pointer"
+                    cursor: "pointer",
+                    display: "flex",
+                    flexDirection: "column"
                   }}
                   onClick={() => handleEditNote(note._id)}
                 >
@@ -305,7 +305,7 @@ const Private = () => {
                     padding: "15px",
                     position: "relative"
                   }}>
-                    <h3 style={{ 
+                    <h3 style={{
                       margin: "0",
                       color: "white",
                       fontSize: "18px",
@@ -325,9 +325,13 @@ const Private = () => {
                       🦖
                     </div>
                   </div>
-                  
-                  <div style={{ 
+
+                  <div style={{
                     padding: "15px",
+                    flexGrow: 1,
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "space-between",
                     background: "linear-gradient(to bottom, #FFFFFF, #F0F7FF)"
                   }}>
                     <div style={{
@@ -339,65 +343,85 @@ const Private = () => {
                     }}>
                       {note.notes ? (
                         <p style={{ margin: "0" }}>
-                          {stripHtml(note.notes).length > 100 
-                            ? stripHtml(note.notes).substring(0, 100) + "..." 
-                            : stripHtml(note.notes)}
+                          {note.notes.length > 100
+                            ? note.notes.substring(0, 100) + "..."
+                            : note.notes}
                         </p>
                       ) : <p style={{ margin: "0", fontStyle: "italic", color: "#9CA3AF" }}>No content</p>}
                     </div>
-                    
-                    <div style={{
-                      borderTop: "1px solid #f8f9fa",
-                      paddingTop: "15px",
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "center"
-                    }}>
-                      <span style={{ 
-                        color: "#6B7280",
-                        fontSize: "12px"
-                      }}>
-                        {note.edited && new Date(note.edited).toDateString() !== new Date(note.created).toDateString() ? 
-                          <span>Edited: {new Date(note.edited).toLocaleDateString()}</span> : null}
 
-                        {note.edited && new Date(note.edited).toDateString() === new Date(note.created).toDateString() ? 
-                          <span>Created: {new Date(note.created).toLocaleDateString()}</span> : null}
-                      </span>
-                      <div style={{ display: "flex", gap: "8px" }}>
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleEditNote(note._id);
-                          }}
-                          style={{
-                            backgroundColor: "#17a2b8",
-                            color: "white",
-                            border: "none",
-                            borderRadius: "4px",
-                            padding: "6px 12px",
-                            fontSize: "12px",
-                            cursor: "pointer"
-                          }}
-                        >
-                          Edit
-                        </button>
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleDelete(note._id);
-                          }}
-                          style={{
-                            backgroundColor: "#EF4444",
-                            color: "white",
-                            border: "none",
-                            borderRadius: "4px",
-                            padding: "6px 12px",
-                            fontSize: "12px",
-                            cursor: "pointer"
-                          }}
-                        >
-                          Delete
-                        </button>
+                    <div style={{ borderTop: "1px solid #f8f9fa", paddingTop: "15px", display: "flex", flexDirection: "column", gap: "8px" }}>
+                      <div style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: "8px"
+                      }}>
+                        <span style={{
+                          color: "#6B7280",
+                          fontSize: "12px"
+                        }}>
+                          {note.edited && new Date(note.edited).toDateString() !== new Date(note.created).toDateString() ?
+                            <span>Edited: {new Date(note.edited).toLocaleDateString()}</span> : null}
+
+                          {note.edited && new Date(note.edited).toDateString() == new Date(note.created).toDateString() ?
+                            <span>Edited: {new Date(note.created).toLocaleDateString()}</span> : null}
+                        </span>
+                        <div style={{ display: "flex", justifyContent: "space-between", gap: "8px" }}>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleStartQuiz(note._id);
+                            }}
+                            style={{
+                              border: "none",
+                              backgroundColor: "#0021A5",
+                              color: "#ffffff",
+                              borderRadius: "4px",
+                              padding: "6px 12px",
+                              fontSize: "14px",
+                              fontWeight: 600,
+                              cursor: "pointer"
+                            }}
+                          >
+                            🌋 Start Quiz
+                          </button>
+                          <div style={{ display: "flex", gap: "8px" }}>
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleEditNote(note._id);
+                              }}
+                              style={{
+                                backgroundColor: "#17a2b8",
+                                color: "white",
+                                border: "none",
+                                borderRadius: "4px",
+                                padding: "6px 12px",
+                                fontSize: "12px",
+                                cursor: "pointer"
+                              }}
+                            >
+                              Edit
+                            </button>
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleDelete(note._id);
+                              }}
+                              style={{
+                                backgroundColor: "#EF4444",
+                                color: "white",
+                                border: "none",
+                                borderRadius: "4px",
+                                padding: "6px 12px",
+                                fontSize: "12px",
+                                cursor: "pointer"
+                              }}
+                            >
+                              Delete
+                            </button>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -406,11 +430,11 @@ const Private = () => {
             </div>
           )}
         </div>
-        
+
         {/* Search results count - show when search is active */}
         {searchTerm && filteredNotes.length > 0 && (
-          <div style={{ 
-            marginTop: "20px", 
+          <div style={{
+            marginTop: "20px",
             textAlign: "center",
             color: "#1E40AF",
             fontWeight: "bold"
