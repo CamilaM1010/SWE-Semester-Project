@@ -1,5 +1,5 @@
 import React from 'react';
-
+//Description of Cornell Note-taking found on homepage
 const CornellDemo = () => {
   return (
     <div className="cornell-demo">

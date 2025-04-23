@@ -90,6 +90,7 @@ def move_note_to_folder(folder_id, note_id):
 
     return jsonify(success=True, message="Note moved to folder"), 200
 
+#Move notes out of a folder
 @folder_bp.route("/notes/<note_id>", methods=["PUT"])
 @login_required
 def move_note_out_all_folder(note_id):
@@ -104,6 +105,7 @@ def move_note_out_all_folder(note_id):
     )
     return jsonify(success=True, message="Note moved out of all folders"), 200
 
+#Remove notes from a folder
 @folder_bp.route("/<folder_id>/notes/<note_id>/remove", methods=["PUT"])
 @login_required
 def move_note_out_one_folder(folder_id, note_id):

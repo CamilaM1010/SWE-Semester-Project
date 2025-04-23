@@ -25,6 +25,7 @@ CORS(app, supports_credentials=True)
 login = LoginManager(app)
 login.login_view = 'api_login'
 
+#Creates relevant blueprints for routing
 app.register_blueprint(notes_bp, url_prefix='/api/notes')
 app.register_blueprint(folder_bp, url_prefix='/api/folders')
 app.register_blueprint(quiz_bp, url_prefix='/api/quiz')
@@ -68,6 +69,7 @@ def api_login():
             'error': 'Invalid username or password'
         }), 401
 
+#Routes registration page
 @app.route('/api/register', methods=['POST'])
 def api_register():
     data = request.get_json()
@@ -94,18 +96,10 @@ def api_register():
             'success': False,
             'error': f'Registration error: {str(e)}'
         }), 500
-    
-@app.route("/api/notes", methods=["GET"])
-@login_required
-def get_notes():
-    notes = notes_collection.find({ "user": current_user.get_id() })
-    result = []
-    for note in notes:
-        note["_id"] = str(note["_id"])
-        result.append(note)
-    return jsonify(result)
 
 
+
+#Reset password functionality and parametera
 @app.route('/api/reset-password', methods=['POST'])
 def api_reset_password():
     data = request.get_json()
@@ -142,12 +136,14 @@ def api_reset_password():
             'error': f'Password reset error: {str(e)}'
         }), 500
 
+#Log out functionality
 @app.route('/api/logout', methods=['POST'])
 @login_required
 def api_logout():
     logout_user()
     return jsonify({'success': True})
 
+#Checks authentication
 @app.route('/api/check-auth', methods=['GET'])
 def check_auth():
     if current_user.is_authenticated:

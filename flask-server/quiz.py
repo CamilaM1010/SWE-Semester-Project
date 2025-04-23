@@ -9,9 +9,11 @@ import datetime
 import json
 import re
 
+#Defines API KEy to have access to AI Quiz Generation
 load_dotenv()
 client = OpenAI(api_key=os.getenv("OPEN_API_KEY"))
 
+#Created quiz blueprint to route properly
 quiz_bp = Blueprint("quiz", __name__)
 
 db = get_database("Notes")
@@ -29,7 +31,7 @@ def generate_quiz():
     if not note_ids:
         return jsonify({"error": "No notes selected."}), 400
 
-    #Gather content from user selected notes
+    #Gather content from user selected notes to generate quizzes
     combined_text = ""
     for nid in note_ids:
         try:
@@ -63,12 +65,14 @@ def generate_quiz():
         "created_at": datetime.datetime.utcnow()
     }
 
+    #Pastes resulting quiz questions
     result = quizzes_collection.insert_one(quiz_doc)
     return jsonify({
         "quiz_id": str(result.inserted_id),
         "questions": quiz["questions"]
     }), 200
 
+#Saving generated quizzes
 @quiz_bp.route("/api/quizzes/save", methods=["POST"])
 @login_required
 def save_quiz():
@@ -89,8 +93,8 @@ def save_quiz():
     result = quizzes_collection.insert_one(quiz_doc)
     return jsonify({ "success": True, "quiz_id": str(result.inserted_id) }), 200
 
-# Updated Quiz Generator using OpenAI v1 API
 
+#AI Quiz Generator using OpenAI
 def generate_ai_quiz(content, quiz_type):
     prompt = (
         f"Generate a {quiz_type.replace('_', ' ')} quiz based on the following Cornell-style notes. "
