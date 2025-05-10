@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../utils/auth';
 
+//Contains links to necessary features/areas
 const Navbar = () => {
   const { user, logout } = useAuth();
 

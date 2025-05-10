@@ -6,6 +6,7 @@ import Register from './pages/Register';
 import ResetPassword from './pages/ResetPassword';
 import Private from './pages/Private';
 import { useAuth } from './utils/auth';
+import QuizGenerator from './pages/Quiz_Generator';
 
 const ProtectedRoute = ({ children }) => {
   const { user } = useAuth();
@@ -30,6 +31,7 @@ function AppRoutes() {
           </ProtectedRoute>
         } 
       />
+      <Route path="/quiz" element={<ProtectedRoute><QuizGenerator /> </ProtectedRoute>}/>
     </Routes>
   );
 }

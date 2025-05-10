@@ -1,5 +1,6 @@
 import React from 'react';
 
+//Desription and titles of listed features
 const FeatureCard = ({ icon, title, description }) => {
   return (
     <div className="feature">

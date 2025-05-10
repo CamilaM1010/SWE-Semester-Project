@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './utils/auth';
+import QuizGenerator from './pages/Quiz_Generator';
 
 // Import components
 import Navbar from './components/Navbar';
@@ -61,6 +62,14 @@ function App() {
                   <ProtectedRoute>
                     <Folder/>
                   </ProtectedRoute>
+                }
+                />
+                <Route 
+                 path="/quiz" 
+                element={
+                  <ProtectedRoute>
+                    <QuizGenerator />
+                    </ProtectedRoute>
                 }
                 />
             </Routes>
